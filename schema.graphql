@@ -1,0 +1,93 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input AuthInput {
+  email: String!
+  password: String!
+}
+
+type AuthResponseWeb {
+  accessToken: String!
+  user: User!
+}
+
+type Mutation {
+  loginWeb(input: AuthInput!): AuthResponseWeb!
+  registerWeb(input: AuthInput!): AuthResponseWeb!
+
+  """Create new project"""
+  createProject(input: ProjectCreateInput!): Project!
+  updateProject(input: ProjectUpdateInput!, id: String!): Project!
+  deleteProject(id: String!): String!
+}
+
+type Project {
+  id: ID!
+  title: String!
+  description: String
+  startDay: String!
+  endDay: String!
+  ownerId: String!
+  owner: User!
+  workdays: [Workday!]!
+  scenes: [Scene!]!
+  requisites: [Requisite!]!
+}
+
+input ProjectCreateInput {
+  title: String!
+  startDay: String!
+  endDay: String!
+}
+
+input ProjectUpdateInput {
+  title: String
+  startDay: String
+  endDay: String
+}
+
+type Query {
+  me: User!
+  users: [User!]!
+  ownedProjects: [Project!]!
+}
+
+type Requisite {
+  id: ID!
+  title: String!
+  description: String
+  isOrdered: Boolean!
+  pricePerDay: Int!
+  projectId: String!
+  project: Project!
+  scenes: [Scene!]!
+}
+
+type Scene {
+  id: ID!
+  title: String
+  location: String
+  sceneNumber: Float!
+  projectId: String!
+  project: Project!
+  workdays: [Workday!]!
+  requisites: [Requisite!]!
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String
+  phone: String
+  projects: [Project!]!
+}
+
+type Workday {
+  id: ID!
+  title: String
+  date: String!
+  projectId: String!
+  project: Project!
+  scenes: [Scene!]!
+}
