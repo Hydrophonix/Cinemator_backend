@@ -3,7 +3,7 @@ import { Injectable, CanActivate, Inject, ExecutionContext, UnauthorizedExceptio
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 // Instruments
-import { IContext } from '../../graphql/graphql.interfaces';
+import { IContext, IContextUser } from '../../graphql/graphql.interfaces';
 import { AuthService } from './auth.service';
 import { IAccessTokenPayload } from './auth.interfaces';
 
@@ -38,9 +38,9 @@ export class AuthGuard implements CanActivate {
         }
 
         if (AuthGuard.isAccessToken(token)) {
-            const { id } = token;
+            const user: IContextUser = { id: token.id };
 
-            ctx.user = { id };
+            ctx.user = user;
 
             return true;
         }

@@ -1,7 +1,7 @@
 // Core
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult } from 'typeorm';
+import { Repository } from 'typeorm';
 
 // Instruments
 import { Project } from './project.entity';
@@ -51,7 +51,9 @@ export class ProjectService {
         return this.projectRepository.save(data);
     }
 
-    deleteOne(id: string): Promise<DeleteResult> {
-        return this.projectRepository.delete(id);
+    async deleteOne(id: string): Promise<string> {
+        await this.projectRepository.delete(id);
+
+        return id;
     }
 }
