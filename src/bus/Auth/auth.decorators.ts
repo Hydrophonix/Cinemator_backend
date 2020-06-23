@@ -7,6 +7,6 @@ export const CurrentUser = createParamDecorator(
         console.log('"|_(ʘ_ʘ)_/" =>: data', data);
         const ctx = GqlExecutionContext.create(context);
 
-        return ctx.getContext().req.user;
+        return ctx.getContext().user;
     },
 );

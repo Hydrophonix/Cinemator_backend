@@ -18,7 +18,7 @@ import { Requisite } from '../bus/Requisite/requisite.entity';
             useFactory: (configService: ConfigService) => ({
                 type:        'postgres',
                 url:         configService.get('DATABASE_URL'),
-                dropSchema:  true,
+                dropSchema:  false,
                 synchronize: true,  // switch this to false once you have the initial tables created and use migrations instead
                 logging:     false,
                 entities:    [ User, Project, Workday, Scene, Requisite ],
