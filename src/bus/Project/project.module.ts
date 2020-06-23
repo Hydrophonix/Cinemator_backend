@@ -2,9 +2,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-// Instruments
+// Modules
 import { AuthModule } from '../Auth/auth.module';
 import { UserModule } from '../User/user.module';
+
+// Instruments
 import { Project } from './project.entity';
 import { ProjectResolver } from './project.resolver';
 import { ProjectService } from './project.service';
@@ -16,5 +18,6 @@ import { ProjectService } from './project.service';
         UserModule,
     ],
     providers: [ ProjectResolver, ProjectService ],
+    exports:   [ ProjectService ],
 })
 export class ProjectModule {}

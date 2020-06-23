@@ -1,6 +1,6 @@
 // Core
 import { InputType, Field } from '@nestjs/graphql';
-import { IsDate, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsISO8601 } from 'class-validator';
 
 @InputType()
 export class ProjectCreateInput {
@@ -9,11 +9,11 @@ export class ProjectCreateInput {
     title: string;
 
     @Field(() => String)
-    @IsDate()
+    @IsISO8601()
     startDay: string;
 
     @Field(() => String)
-    @IsDate()
+    @IsISO8601()
     endDay:string;
 }
 
@@ -24,10 +24,10 @@ export class ProjectUpdateInput {
     title?: string;
 
     @Field(() => String, { nullable: true })
-    @IsDate()
+    @IsISO8601()
     startDay?: string;
 
     @Field(() => String, { nullable: true })
-    @IsDate()
+    @IsISO8601()
     endDay?: string;
 }

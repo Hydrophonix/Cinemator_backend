@@ -27,7 +27,7 @@ export class Workday extends BaseEntity {
     title?: string;
 
     @Field()
-    @Column('date')
+    @Column('date', { unique: true })
     date: string;
 
     // ----------------------------------------------------------------------------------------------------------------

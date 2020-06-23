@@ -20,6 +20,10 @@ type Mutation {
   createProject(input: ProjectCreateInput!): Project!
   updateProject(input: ProjectUpdateInput!, id: String!): Project!
   deleteProject(id: String!): String!
+  createWorkday(projectId: String!, input: WorkdayCreateInput!): Workday!
+  updateWorkday(id: String!, input: WorkdayUpdateInput!): Workday!
+  createScene(input: SceneCreateInput!, workdayId: String!, projectId: String!): Scene!
+  deleteScene(id: String!): String!
 }
 
 type Project {
@@ -51,6 +55,8 @@ type Query {
   me: User!
   users: [User!]!
   ownedProjects: [Project!]!
+  workdays(projectId: String!): [Workday!]!
+  scenes(projectId: String!): [Scene!]!
 }
 
 type Requisite {
@@ -75,6 +81,12 @@ type Scene {
   requisites: [Requisite!]!
 }
 
+input SceneCreateInput {
+  title: String
+  location: String
+  sceneNumber: Int!
+}
+
 type User {
   id: ID!
   email: String!
@@ -90,4 +102,14 @@ type Workday {
   projectId: String!
   project: Project!
   scenes: [Scene!]!
+}
+
+input WorkdayCreateInput {
+  title: String
+  date: String!
+}
+
+input WorkdayUpdateInput {
+  title: String
+  date: String
 }
