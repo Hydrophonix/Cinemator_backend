@@ -14,13 +14,19 @@ export class UserService {
         private readonly userRepository: Repository<User>,
     ) {}
 
+    // ================================================================================================================
+
     createOne(input: AuthInput): Promise<User> {
         return this.userRepository.save(input);
     }
 
+    // ================================================================================================================
+
     findAll(): Promise<User[]> {
         return this.userRepository.find();
     }
+
+    // ================================================================================================================
 
     async findOne(id: string): Promise<User> {
         const user = await this.userRepository.findOne(id);
@@ -32,9 +38,13 @@ export class UserService {
         return user;
     }
 
+    // ================================================================================================================
+
     findOneByEmail(email: string): Promise<User | undefined> {
         return this.userRepository.findOne({ where: { email }});
     }
+
+    // ================================================================================================================
 
     updateOne(input: User): Promise<User> {
         return this.userRepository.save(input);

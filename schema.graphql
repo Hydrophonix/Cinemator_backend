@@ -13,17 +13,17 @@ type AuthResponseWeb {
 }
 
 type Mutation {
-  loginWeb(input: AuthInput!): AuthResponseWeb!
-  registerWeb(input: AuthInput!): AuthResponseWeb!
+  createScene(input: SceneCreateInput!, workdayId: String!, projectId: String!): Scene!
+  deleteScene(id: String!): String!
+  createWorkday(projectId: String!, input: WorkdayCreateInput!): Workday!
+  updateWorkday(id: String!, input: WorkdayUpdateInput!): Workday!
 
   """Create new project"""
   createProject(input: ProjectCreateInput!): Project!
   updateProject(input: ProjectUpdateInput!, id: String!): Project!
   deleteProject(id: String!): String!
-  createWorkday(projectId: String!, input: WorkdayCreateInput!): Workday!
-  updateWorkday(id: String!, input: WorkdayUpdateInput!): Workday!
-  createScene(input: SceneCreateInput!, workdayId: String!, projectId: String!): Scene!
-  deleteScene(id: String!): String!
+  loginWeb(input: AuthInput!): AuthResponseWeb!
+  registerWeb(input: AuthInput!): AuthResponseWeb!
 }
 
 type Project {
@@ -52,11 +52,11 @@ input ProjectUpdateInput {
 }
 
 type Query {
+  scenes(projectId: String!): [Scene!]!
+  workdays(projectId: String!): [Workday!]!
+  ownedProjects: [Project!]!
   me: User!
   users: [User!]!
-  ownedProjects: [Project!]!
-  workdays(projectId: String!): [Workday!]!
-  scenes(projectId: String!): [Scene!]!
 }
 
 type Requisite {

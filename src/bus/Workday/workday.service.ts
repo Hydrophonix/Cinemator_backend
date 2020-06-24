@@ -15,18 +15,24 @@ export class WorkdayService {
         private readonly workdayRepository: Repository<Workday>,
     ) {}
 
+    // ================================================================================================================
+
     createOne(input: WorkdayCreateInput, project: Project): Promise<Workday> {
-        const workday = {
+        const workday: Partial<Workday> = {
             ...input,
-            project,
+            projectId: project.id,
         };
 
         return this.workdayRepository.save(workday);
     }
 
+    // ================================================================================================================
+
     findProjectWorkdays(projectId: string): Promise<Workday[]> {
         return this.workdayRepository.find({ where: { projectId }});
     }
+
+    // ================================================================================================================
 
     async findOne(id: string): Promise<Workday> {
         const workday = await this.workdayRepository.findOne(id);
@@ -38,6 +44,8 @@ export class WorkdayService {
         return workday;
     }
 
+    // ================================================================================================================
+
     async findOneByDate(date: string): Promise<Workday> {
         const workday = await this.workdayRepository.findOne({ where: { date }});
 
@@ -48,6 +56,8 @@ export class WorkdayService {
         return workday;
     }
 
+    // ================================================================================================================
+
     updateOne(workday: Workday, input: WorkdayUpdateInput): Promise<Workday> {
         const data = {
             ...workday,
@@ -56,6 +66,8 @@ export class WorkdayService {
 
         return this.workdayRepository.save(data);
     }
+
+    // ================================================================================================================
 
     async deleteOne(id: string): Promise<string> {
         await this.workdayRepository.delete(id);

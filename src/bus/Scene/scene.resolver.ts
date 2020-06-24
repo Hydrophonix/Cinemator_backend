@@ -2,14 +2,18 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 
-// Instruments
+// Entities
+import { Scene } from './scene.entity';
+
+// Services
+import { SceneService } from './scene.service';
 import { ProjectService } from '../Project/project.service';
 import { WorkdayService } from '../Workday/workday.service';
-import { Scene } from './scene.entity';
-import { SceneService } from './scene.service';
+
+// Instruments
 import { SceneCreateInput } from './scene.inputs';
 
-@Resolver('Workday')
+@Resolver(() => Scene)
 export class SceneResolver {
     constructor(
         @Inject(ProjectService)
@@ -19,12 +23,16 @@ export class SceneResolver {
         private readonly sceneService: SceneService,
     ) {}
 
+    // ================================================================================================================
+
     @Query(() => [ Scene ])
     scenes(
         @Args('projectId') projectId: string,
     ): Promise<Scene[]> {
         return this.sceneService.findProjectScenes(projectId);
     }
+
+    // ================================================================================================================
 
     @Mutation(() => Scene)
     async createScene(
@@ -37,6 +45,8 @@ export class SceneResolver {
 
         return this.sceneService.createOne(input, project, workday);
     }
+
+    // ================================================================================================================
 
     @Mutation(() => String)
     async deleteScene(

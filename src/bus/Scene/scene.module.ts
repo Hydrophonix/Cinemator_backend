@@ -1,5 +1,5 @@
 // Core
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Modules
@@ -14,9 +14,11 @@ import { SceneService } from './scene.service';
 @Module({
     imports: [
         TypeOrmModule.forFeature([ Scene ]),
-        ProjectModule,
-        WorkdayModule,
+        forwardRef(() => ProjectModule),
+        forwardRef(() => WorkdayModule),
+
     ],
     providers: [ SceneResolver, SceneService ],
+    exports:   [ SceneService ],
 })
 export class SceneModule {}
