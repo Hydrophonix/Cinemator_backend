@@ -1,67 +1,109 @@
 // Core
-import { Resolver, Args, Mutation, Query } from '@nestjs/graphql';
+import { Resolver, Args, Mutation, Query, ResolveField, Parent } from '@nestjs/graphql';
 import { UseGuards, Inject } from '@nestjs/common';
+
+// Entities
+import { Project } from './project.entity';
+import { User } from '../User/user.entity';
+import { Workday } from '../Workday/workday.entity';
+import { Scene } from '../Scene/scene.entity';
+
+// Services
+import { ProjectService } from './project.service';
+import { UserService } from '../User/user.service';
+import { WorkdayService } from '../Workday/workday.service';
+import { SceneService } from '../Scene/scene.service';
 
 // Instruments
 import { IContextUser } from '../../graphql/graphql.interfaces';
 import { AuthGuard } from '../Auth/auth.guard';
 import { CurrentUser } from '../Auth/auth.decorators';
-import { UserService } from '../User/user.service';
-import { Project } from './project.entity';
-import { ProjectService } from './project.service';
 import { ProjectCreateInput, ProjectUpdateInput } from './project.inputs';
 
 
-@Resolver('Project')
+@Resolver(() => Project)
 export class ProjectResolver {
     constructor(
-        private readonly projectService: ProjectService,
         @Inject(UserService)
         private readonly userService: UserService,
+        @Inject(WorkdayService)
+        private readonly workdayService: WorkdayService,
+        @Inject(SceneService)
+        private readonly sceneService: SceneService,
+        private readonly projectService: ProjectService,
     ) {}
 
-    // ==============================================================================================
+    // ================================================================================================================
 
     @Mutation(() => Project, { description: 'Create new project' })
     @UseGuards(AuthGuard)
     async createProject(
         @Args('input') input: ProjectCreateInput,
-        // eslint-disable-next-line @typescript-eslint/indent
-        @CurrentUser() { id }: IContextUser,
+        @CurrentUser() { id }: IContextUser, // eslint-disable-line @typescript-eslint/indent
     ): Promise<Project> {
-        const user = await this.userService.findOne(id);
-
-        return await this.projectService.createOne(input, user);
+        return await this.projectService.createOne(input, id);
     }
 
-    // ==============================================================================================
+    // ================================================================================================================
 
     @Query(() => [ Project ])
     @UseGuards(AuthGuard)
-    async ownedProjects(@CurrentUser() { id }: IContextUser): Promise<Project[]> {
+    async ownedProjects(
+        @CurrentUser() { id }: IContextUser,
+    ): Promise<Project[]> {
         return await this.projectService.findOwnedProjects(id);
     }
 
-    // ==============================================================================================
+    // ================================================================================================================
 
     @Mutation(() => Project)
     @UseGuards(AuthGuard)
     async updateProject(
         @Args('id') id: string,
-        // eslint-disable-next-line @typescript-eslint/indent
-        @Args('input') input: ProjectUpdateInput,
+        @Args('input') input: ProjectUpdateInput, // eslint-disable-line @typescript-eslint/indent
     ): Promise<Project> {
         const project = await this.projectService.findOne(id);
 
         return await this.projectService.updateOne(project, input);
     }
 
-    // ==============================================================================================
+    // ================================================================================================================
 
     @Mutation(() => String)
-    async deleteProject(@Args('id') id: string): Promise<string> {
+    async deleteProject(
+        @Args('id') id: string,
+    ): Promise<string> {
         await this.projectService.deleteOne(id);
 
         return id;
+    }
+
+    // ================================================================================================================
+    // Relations
+    // ================================================================================================================
+
+    @ResolveField()
+    owner(
+        @Parent() { ownerId }: Project,
+    ): Promise<User> {
+        return this.userService.findOne(ownerId);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField()
+    workdays(
+        @Parent() { id }: Project,
+    ): Promise<Workday[]> {
+        return this.workdayService.findProjectWorkdays(id);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField()
+    scenes(
+        @Parent() { id }: Project,
+    ): Promise<Scene[]> {
+        return this.sceneService.findProjectScenes(id);
     }
 }

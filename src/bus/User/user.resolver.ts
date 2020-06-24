@@ -1,21 +1,29 @@
 // Core
-import { Resolver, Query } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
+import { Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
+import { UseGuards, Inject } from '@nestjs/common';
 
-// Instrumenta
+// Entities
 import { User } from './user.entity';
+import { Project } from '../Project/project.entity';
+
+// Services
 import { UserService } from './user.service';
+import { ProjectService } from '../Project/project.service';
 
 // Instruments
-import { AuthGuard } from '../Auth/auth.guard';
 import { IContextUser } from '../../graphql/graphql.interfaces';
 import { CurrentUser } from '../Auth/auth.decorators';
+import { AuthGuard } from '../Auth/auth.guard';
 
-@Resolver('User')
+@Resolver(() => User)
 export class UserResolver {
     constructor(
+        @Inject(ProjectService)
+        private readonly projectService: ProjectService,
         private readonly userService: UserService,
     ) {}
+
+    // ================================================================================================================
 
     @Query(() => User)
     @UseGuards(AuthGuard)
@@ -23,10 +31,19 @@ export class UserResolver {
         return this.userService.findOne(id);
     }
 
+    // ================================================================================================================
+
     @Query(() => [ User ])
-    users(
-    // @Info() info: GraphQLResolveInfo,
-    ) {
+    users() {
         return this.userService.findAll();
+    }
+
+    // ================================================================================================================
+    // Relations
+    // ================================================================================================================
+
+    @ResolveField()
+    projects(@Parent() { id }: User): Promise<Project[]> {
+        return this.projectService.findOwnedProjects(id);
     }
 }
