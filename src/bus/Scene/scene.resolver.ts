@@ -48,12 +48,13 @@ export class SceneResolver {
 
     // ================================================================================================================
 
-    @Mutation(() => String)
+    @Mutation(() => Scene)
     async deleteScene(
         @Args('id') id: string,
-    ): Promise<string> {
+    ): Promise<Scene> {
+        const scene = await this.sceneService.findOne(id);
         await this.sceneService.deleteOne(id);
 
-        return id;
+        return scene;
     }
 }

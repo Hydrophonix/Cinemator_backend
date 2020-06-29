@@ -4,52 +4,51 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 // Instruments
-import { Scene } from './scene.entity';
-import { SceneCreateInput } from './scene.inputs';
+import { Requisite } from './requisite.entity';
+import { RequisiteCreateInput } from './requisite.inputs';
 import { Project } from '../Project/project.entity';
-import { Workday } from '../Workday/workday.entity';
+// import { Scene } from '../Scene/scene.entity';
 
 @Injectable()
-export class SceneService {
+export class RequisiteService {
     constructor(
-        @InjectRepository(Scene)
-        private readonly sceneRepository: Repository<Scene>,
+        @InjectRepository(Requisite)
+        private readonly requisiteRepository: Repository<Requisite>,
     ) {}
 
     // ================================================================================================================
 
-    createOne(input: SceneCreateInput, project: Project, workday: Workday): Promise<Scene> {
-        const scene: Partial<Scene> = {
+    createOne(input: RequisiteCreateInput, project: Project): Promise<Requisite> {
+        const requisite: Partial<Requisite> = {
             ...input,
             projectId: project.id,
-            workdays:  [ workday ],
         };
 
-        return this.sceneRepository.save(scene);
+        return this.requisiteRepository.save(requisite);
     }
 
     // ================================================================================================================
 
-    findProjectScenes(projectId: string): Promise<Scene[]> {
-        return this.sceneRepository.find({ where: { projectId }});
+    findProjectRequisites(projectId: string): Promise<Requisite[]> {
+        return this.requisiteRepository.find({ where: { projectId }});
     }
 
     // ================================================================================================================
 
-    findWorkdayScenes(workdayId: string): Promise<Scene[]> {
-        return this.sceneRepository.find({ where: { workdays: workdayId }});
+    findScenesRequisites(sceneId: string): Promise<Requisite[]> {
+        return this.requisiteRepository.find({ where: { scenes: sceneId }});
     }
 
     // ================================================================================================================
 
-    async findOne(id: string): Promise<Scene> {
-        const scene = await this.sceneRepository.findOne(id);
+    async findOne(id: string): Promise<Requisite> {
+        const requisite = await this.requisiteRepository.findOne(id);
 
-        if (!scene) {
-            throw new BadRequestException('Scene does not exist');
+        if (!requisite) {
+            throw new BadRequestException('Project does not exist');
         }
 
-        return scene;
+        return requisite;
     }
 
     // ================================================================================================================
@@ -63,7 +62,7 @@ export class SceneService {
     // }
 
     async deleteOne(id: string): Promise<string> {
-        await this.sceneRepository.delete(id);
+        await this.requisiteRepository.delete(id);
 
         return id;
     }

@@ -46,8 +46,8 @@ export class WorkdayService {
 
     // ================================================================================================================
 
-    async findOneByDate(date: string): Promise<Workday> {
-        const workday = await this.workdayRepository.findOne({ where: { date }});
+    async findOneByDate(date: string, projectId: string): Promise<Workday> {
+        const workday = await this.workdayRepository.findOne({ where: { date, projectId }});
 
         if (!workday) {
             throw new BadRequestException('Workday does not exist');

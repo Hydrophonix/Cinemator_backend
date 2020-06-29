@@ -32,6 +32,14 @@ export class WorkdayResolver {
     ): Promise<Workday[]> {
         return this.workdayService.findProjectWorkdays(projectId);
     }
+    // ================================================================================================================
+
+    @Query(() => Workday)
+    workday(
+        @Args('id') id: string,
+    ): Promise<Workday> {
+        return this.workdayService.findOne(id);
+    }
 
     // ================================================================================================================
 

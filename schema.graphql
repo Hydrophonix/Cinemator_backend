@@ -14,7 +14,7 @@ type AuthResponseWeb {
 
 type Mutation {
   createScene(input: SceneCreateInput!, workdayId: String!, projectId: String!): Scene!
-  deleteScene(id: String!): String!
+  deleteScene(id: String!): Scene!
   createWorkday(projectId: String!, input: WorkdayCreateInput!): Workday!
   updateWorkday(id: String!, input: WorkdayUpdateInput!): Workday!
 
@@ -24,6 +24,8 @@ type Mutation {
   deleteProject(id: String!): String!
   loginWeb(input: AuthInput!): AuthResponseWeb!
   registerWeb(input: AuthInput!): AuthResponseWeb!
+  createRequisite(projectId: String!, input: RequisiteCreateInput!): Requisite!
+  deleteRequisite(id: String!): String!
 }
 
 type Project {
@@ -54,9 +56,11 @@ input ProjectUpdateInput {
 type Query {
   scenes(projectId: String!): [Scene!]!
   workdays(projectId: String!): [Workday!]!
+  workday(id: String!): Workday!
   ownedProjects: [Project!]!
   me: User!
   users: [User!]!
+  requisites(projectId: String!): [Requisite!]!
 }
 
 type Requisite {
@@ -68,6 +72,13 @@ type Requisite {
   projectId: String!
   project: Project!
   scenes: [Scene!]!
+}
+
+input RequisiteCreateInput {
+  title: String
+  description: String
+  isOrdered: Boolean = false
+  pricePerDay: Int = 0
 }
 
 type Scene {
