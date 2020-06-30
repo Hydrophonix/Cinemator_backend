@@ -34,20 +34,14 @@ export class WorkdayService {
 
     // ================================================================================================================
 
-    async findOne(id: string): Promise<Workday> {
-        const workday = await this.workdayRepository.findOne(id);
-
-        if (!workday) {
-            throw new BadRequestException('Workday does not exist');
-        }
-
-        return workday;
+    findSceneWorkdays(sceneId: string): Promise<Workday[]> {
+        return this.workdayRepository.find({ where: { scenes: { id: sceneId }}});
     }
 
     // ================================================================================================================
 
-    async findOneByDate(date: string, projectId: string): Promise<Workday> {
-        const workday = await this.workdayRepository.findOne({ where: { date, projectId }});
+    async findOne(id: string): Promise<Workday> {
+        const workday = await this.workdayRepository.findOne(id);
 
         if (!workday) {
             throw new BadRequestException('Workday does not exist');

@@ -1,14 +1,17 @@
 // Core
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, ResolveField, Parent } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 
 // Entities
 import { Scene } from './scene.entity';
+import { Requisite } from '../Requisite/requisite.entity';
+import { Workday } from '../Workday/workday.entity';
 
 // Services
 import { SceneService } from './scene.service';
 import { ProjectService } from '../Project/project.service';
 import { WorkdayService } from '../Workday/workday.service';
+import { RequisiteService } from '../Requisite/requisite.service';
 
 // Instruments
 import { SceneCreateInput } from './scene.inputs';
@@ -20,6 +23,8 @@ export class SceneResolver {
         private readonly projectService: ProjectService,
         @Inject(WorkdayService)
         private readonly workdayService: WorkdayService,
+        @Inject(RequisiteService)
+        private readonly requisiteService: RequisiteService,
         private readonly sceneService: SceneService,
     ) {}
 
@@ -37,13 +42,18 @@ export class SceneResolver {
     @Mutation(() => Scene)
     async createScene(
         @Args('projectId') projectId: string,
-        @Args('workdayId') workdayId: string, // eslint-disable-line @typescript-eslint/indent
+        @Args('workdayId', { nullable: true }) workdayId: string, // eslint-disable-line @typescript-eslint/indent
         @Args('input') input: SceneCreateInput, // eslint-disable-line @typescript-eslint/indent
     ): Promise<Scene> {
         const project = await this.projectService.findOne(projectId);
-        const workday = await this.workdayService.findOne(workdayId);
 
-        return this.sceneService.createOne(input, project, workday);
+        if (workdayId) {
+            const workday = await this.workdayService.findOne(workdayId);
+
+            return this.sceneService.createOne(input, project, workday);
+        }
+
+        return this.sceneService.createOne(input, project);
     }
 
     // ================================================================================================================
@@ -56,5 +66,25 @@ export class SceneResolver {
         await this.sceneService.deleteOne(id);
 
         return scene;
+    }
+
+    // ================================================================================================================
+    // Relations
+    // ================================================================================================================
+
+    @ResolveField()
+    requisites(
+        @Parent() { id }: Scene,
+    ): Promise<Requisite[]> {
+        return this.requisiteService.findScenesRequisites(id);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField()
+    workdays(
+        @Parent() { id }: Scene,
+    ): Promise<Workday[]> {
+        return this.workdayService.findSceneWorkdays(id);
     }
 }

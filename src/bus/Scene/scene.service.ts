@@ -18,12 +18,15 @@ export class SceneService {
 
     // ================================================================================================================
 
-    createOne(input: SceneCreateInput, project: Project, workday: Workday): Promise<Scene> {
+    createOne(input: SceneCreateInput, project: Project, workday?: Workday): Promise<Scene> {
         const scene: Partial<Scene> = {
             ...input,
             projectId: project.id,
-            workdays:  [ workday ],
         };
+
+        if (workday) {
+            scene.workdays =  [ workday ];
+        }
 
         return this.sceneRepository.save(scene);
     }
@@ -37,7 +40,13 @@ export class SceneService {
     // ================================================================================================================
 
     findWorkdayScenes(workdayId: string): Promise<Scene[]> {
-        return this.sceneRepository.find({ where: { workdays: workdayId }});
+        return this.sceneRepository.find({ where: { workdays: { id: workdayId }}});
+    }
+
+    // ================================================================================================================
+
+    findRequisiteScenes(requisiteId: string): Promise<Scene[]> {
+        return this.sceneRepository.find({ where: { requisites: { id: requisiteId }}});
     }
 
     // ================================================================================================================

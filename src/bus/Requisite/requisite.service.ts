@@ -36,7 +36,7 @@ export class RequisiteService {
     // ================================================================================================================
 
     findScenesRequisites(sceneId: string): Promise<Requisite[]> {
-        return this.requisiteRepository.find({ where: { scenes: sceneId }});
+        return this.requisiteRepository.find({ where: { scenes: { id: sceneId }}});
     }
 
     // ================================================================================================================
@@ -45,7 +45,7 @@ export class RequisiteService {
         const requisite = await this.requisiteRepository.findOne(id);
 
         if (!requisite) {
-            throw new BadRequestException('Project does not exist');
+            throw new BadRequestException('Requisite does not exist');
         }
 
         return requisite;

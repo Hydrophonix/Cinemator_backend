@@ -4,9 +4,9 @@ import { IsNumber, IsString, IsBoolean } from 'class-validator';
 
 @InputType()
 export class RequisiteCreateInput {
-    @Field(() => String, { nullable: true })
+    @Field(() => String)
     @IsString()
-    title?: string;
+    title: string;
 
     @Field(() => String, { nullable: true })
     @IsString()

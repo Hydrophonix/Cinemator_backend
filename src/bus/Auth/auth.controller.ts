@@ -25,16 +25,17 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async refreshToken(@Req() req: Request, @Res() res: Response) {
         const tokenKey = this.authService.getRefreshTokenFromCookies(req);
+        console.log('"|_(ʘ_ʘ)_/" =>: AuthController -> refreshToken -> tokenKey', tokenKey);
 
         if (!tokenKey) {
-            return this.NO_TOKEN;
+            return res.send(this.NO_TOKEN);
         }
 
         // TODO: add types
         const token: any = this.authService.verifyRefreshToken(tokenKey);
 
         if (!token) {
-            return this.NO_TOKEN;
+            return res.send(this.NO_TOKEN);
         }
 
         // token is valid and
@@ -43,7 +44,7 @@ export class AuthController {
         const user = await this.userService.findOne(token.id);
 
         if (!user || user.tokenVersion !== token.tokenVersion) {
-            return this.NO_TOKEN;
+            return res.send(this.NO_TOKEN);
         }
 
         const accessToken = this.authService.createAccessToken(user);
