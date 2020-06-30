@@ -25,7 +25,6 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async refreshToken(@Req() req: Request, @Res() res: Response) {
         const tokenKey = this.authService.getRefreshTokenFromCookies(req);
-        console.log('"|_(ʘ_ʘ)_/" =>: AuthController -> refreshToken -> tokenKey', tokenKey);
 
         if (!tokenKey) {
             return res.send(this.NO_TOKEN);

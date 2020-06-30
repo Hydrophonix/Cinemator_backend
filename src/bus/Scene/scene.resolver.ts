@@ -36,6 +36,14 @@ export class SceneResolver {
     ): Promise<Scene[]> {
         return this.sceneService.findProjectScenes(projectId);
     }
+    // ================================================================================================================
+
+    @Query(() => Scene)
+    scene(
+        @Args('id') id: string,
+    ): Promise<Scene> {
+        return this.sceneService.findOne(id);
+    }
 
     // ================================================================================================================
 

@@ -65,6 +65,16 @@ export class WorkdayResolver {
         return this.workdayService.updateOne(workday, input);
     }
 
+    @Mutation(() => Workday)
+    async deleteWorkday(
+        @Args('id') id: string,
+    ): Promise<Workday> {
+        const workday = await this.workdayService.findOne(id);
+        await this.workdayService.deleteOne(id);
+
+        return workday;
+    }
+
     // ================================================================================================================
     // Relations
     // ================================================================================================================
