@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Modules
 import { ProjectModule } from '../Project/project.module';
-import { SceneModule } from '../Scene/scene.module';
 
 // Instruments
 import { Workday } from './workday.entity';
@@ -15,7 +14,6 @@ import { WorkdayResolver } from './workday.resolver';
     imports: [
         TypeOrmModule.forFeature([ Workday ]),
         forwardRef(() => ProjectModule),
-        forwardRef(() => SceneModule),
     ],
     providers: [ WorkdayService, WorkdayResolver ],
     exports:   [ WorkdayService ],

@@ -3,9 +3,12 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-// Instruments
-import { Project } from '../Project/project.entity';
+// Entities
 import { Workday } from './workday.entity';
+import { Project } from '../Project/project.entity';
+import { Scene } from '../Scene/scene.entity';
+
+// Instruments
 import { WorkdayCreateInput, WorkdayUpdateInput } from './workday.inputs';
 
 @Injectable()
@@ -24,18 +27,6 @@ export class WorkdayService {
         };
 
         return this.workdayRepository.save(workday);
-    }
-
-    // ================================================================================================================
-
-    findProjectWorkdays(projectId: string): Promise<Workday[]> {
-        return this.workdayRepository.find({ where: { projectId }});
-    }
-
-    // ================================================================================================================
-
-    findSceneWorkdays(sceneId: string): Promise<Workday[]> {
-        return this.workdayRepository.find({ where: { scenes: { id: sceneId }}});
     }
 
     // ================================================================================================================
@@ -63,9 +54,65 @@ export class WorkdayService {
 
     // ================================================================================================================
 
-    async deleteOne(id: string): Promise<string> {
-        await this.workdayRepository.delete(id);
+    async deleteOne(id: string): Promise<boolean> {
+        try {
+            await this.workdayRepository.delete(id);
 
-        return id;
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
+
+    // ================================================================================================================
+
+    findProjectWorkdays(projectId: string): Promise<Workday[]> {
+        return this.workdayRepository.find({ where: { projectId }});
+    }
+
+    // ================================================================================================================
+    // Relations
+    // ================================================================================================================
+
+    async addScenes(workdayId: string, sceneIds: string[]): Promise<boolean> {
+        try {
+            await this.workdayRepository
+                .createQueryBuilder()
+                .relation('scenes')
+                .of(workdayId)
+                .add(sceneIds);
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // ================================================================================================================
+
+    async removeScenes(workdayId: string, sceneIds: string[]): Promise<boolean> {
+        try {
+            await this.workdayRepository
+                .createQueryBuilder()
+                .relation('scenes')
+                .of(workdayId)
+                .remove(sceneIds);
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // ================================================================================================================
+
+    findWorkdayScenes(workdayId: string): Promise<Scene[]> {
+        return this.workdayRepository
+            .createQueryBuilder()
+            .relation('scenes')
+            .of(workdayId)
+            .loadMany();
+    }
+
+    // ================================================================================================================
 }

@@ -4,14 +4,14 @@ import { Inject } from '@nestjs/common';
 
 // Entities
 import { Scene } from './scene.entity';
-import { Requisite } from '../Requisite/requisite.entity';
+import { Project } from '../Project/project.entity';
 import { Workday } from '../Workday/workday.entity';
+import { Requisite } from '../Requisite/requisite.entity';
 
 // Services
 import { SceneService } from './scene.service';
 import { ProjectService } from '../Project/project.service';
 import { WorkdayService } from '../Workday/workday.service';
-import { RequisiteService } from '../Requisite/requisite.service';
 
 // Instruments
 import { SceneCreateInput } from './scene.inputs';
@@ -23,8 +23,6 @@ export class SceneResolver {
         private readonly projectService: ProjectService,
         @Inject(WorkdayService)
         private readonly workdayService: WorkdayService,
-        @Inject(RequisiteService)
-        private readonly requisiteService: RequisiteService,
         private readonly sceneService: SceneService,
     ) {}
 
@@ -66,14 +64,11 @@ export class SceneResolver {
 
     // ================================================================================================================
 
-    @Mutation(() => Scene)
-    async deleteScene(
+    @Mutation(() => Boolean)
+    deleteScene(
         @Args('id') id: string,
-    ): Promise<Scene> {
-        const scene = await this.sceneService.findOne(id);
-        await this.sceneService.deleteOne(id);
-
-        return scene;
+    ): Promise<boolean> {
+        return this.sceneService.deleteOne(id);
     }
 
     // ================================================================================================================
@@ -81,10 +76,19 @@ export class SceneResolver {
     // ================================================================================================================
 
     @ResolveField()
+    project(
+        @Parent() { projectId }: Scene,
+    ): Promise<Project> {
+        return this.projectService.findOne(projectId);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField()
     requisites(
         @Parent() { id }: Scene,
     ): Promise<Requisite[]> {
-        return this.requisiteService.findScenesRequisites(id);
+        return this.sceneService.findSceneRequisites(id);
     }
 
     // ================================================================================================================
@@ -93,6 +97,6 @@ export class SceneResolver {
     workdays(
         @Parent() { id }: Scene,
     ): Promise<Workday[]> {
-        return this.workdayService.findSceneWorkdays(id);
+        return this.sceneService.findSceneWorkdays(id);
     }
 }

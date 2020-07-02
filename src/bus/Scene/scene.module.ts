@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // Modules
 import { ProjectModule } from '../Project/project.module';
 import { WorkdayModule } from '../Workday/workday.module';
-import { RequisiteModule } from '../Requisite/requisite.module';
 
 // Instruments
 import { Scene } from './scene.entity';
@@ -17,8 +16,6 @@ import { SceneService } from './scene.service';
         TypeOrmModule.forFeature([ Scene ]),
         forwardRef(() => ProjectModule),
         forwardRef(() => WorkdayModule),
-        forwardRef(() => RequisiteModule),
-
     ],
     providers: [ SceneResolver, SceneService ],
     exports:   [ SceneService ],

@@ -1,15 +1,15 @@
 // Core
-import { Resolver, Query, Args, Mutation, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, Parent, ResolveField } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
 
 // Entities
 import { Workday } from './workday.entity';
+import { Project } from '../Project/project.entity';
 import { Scene } from '../Scene/scene.entity';
 
 // Services
 import { WorkdayService } from './workday.service';
 import { ProjectService } from '../Project/project.service';
-import { SceneService } from '../Scene/scene.service';
 
 // Instruments
 import { WorkdayCreateInput, WorkdayUpdateInput } from './workday.inputs';
@@ -19,8 +19,6 @@ export class WorkdayResolver {
     constructor(
         @Inject(ProjectService)
         private readonly projectService: ProjectService,
-        @Inject(SceneService)
-        private readonly sceneService: SceneService,
         private readonly workdayService: WorkdayService,
     ) {}
 
@@ -65,6 +63,8 @@ export class WorkdayResolver {
         return this.workdayService.updateOne(workday, input);
     }
 
+    // ================================================================================================================
+
     @Mutation(() => Workday)
     async deleteWorkday(
         @Args('id') id: string,
@@ -79,10 +79,39 @@ export class WorkdayResolver {
     // Relations
     // ================================================================================================================
 
+    @Mutation(() => Boolean)
+    addScenesToWorkday(
+        @Args('workdayId') workdayId: string,
+        @Args('sceneIds', { type: () => [ String ] }) sceneIds: string[],  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<boolean> {
+        return this.workdayService.addScenes(workdayId, sceneIds);
+    }
+
+    // ================================================================================================================
+
+    @Mutation(() => Boolean)
+    removeScenesFromWorkday(
+        @Args('workdayId') workdayId: string,
+        @Args('sceneIds', { type: () => [ String ] }) sceneIds: string[],  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<boolean> {
+        return this.workdayService.removeScenes(workdayId, sceneIds);
+    }
+
+    // ================================================================================================================
+
     @ResolveField()
+    project(
+        @Parent() { projectId }: Workday,
+    ): Promise<Project> {
+        return this.projectService.findOne(projectId);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField(() => [ Scene ])
     scenes(
         @Parent() { id }: Workday,
     ): Promise<Scene[]> {
-        return this.sceneService.findProjectScenes(id);
+        return this.workdayService.findWorkdayScenes(id);
     }
 }
