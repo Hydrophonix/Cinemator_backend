@@ -76,12 +76,18 @@ export class WorkdayResolver {
     // Relations
     // ================================================================================================================
 
-    @Mutation(() => Boolean)
-    addScenesToWorkday(
+    @Mutation(() => Workday) // VALIK LOOK AT THIS!!!
+    async addScenesToWorkday(
         @Args('workdayId') workdayId: string,
         @Args('sceneIds', { type: () => [ String ] }) sceneIds: string[],  // eslint-disable-line @typescript-eslint/indent
-    ): Promise<boolean> {
-        return this.workdayService.addScenes(workdayId, sceneIds);
+    ): Promise<Workday> {
+        const IsSuccessfuly = await this.workdayService.addScenes(workdayId, sceneIds);
+
+        if (!IsSuccessfuly) {
+            throw new Error(`Add scenes to workday: ${workdayId} failed.`);
+        }
+
+        return this.workdayService.findOne(workdayId);
     }
 
     // ================================================================================================================
