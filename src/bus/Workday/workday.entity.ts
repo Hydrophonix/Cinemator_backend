@@ -9,6 +9,7 @@ import {
     JoinColumn,
     ManyToMany,
     JoinTable,
+    RelationId,
 } from 'typeorm';
 
 // Entities
@@ -27,7 +28,7 @@ export class Workday extends BaseEntity {
     title?: string;
 
     @Field()
-    @Column('date', { unique: true })
+    @Column('date')
     date: string;
     // ================================================================================================================
     // Relations

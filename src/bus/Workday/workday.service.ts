@@ -64,15 +64,13 @@ export class WorkdayService {
 
     // ================================================================================================================
 
-    addScene(workdayId: string, sceneId: string): Promise<Workday> {
-        console.log('"|_(ʘ_ʘ)_/" =>: WorkdayService -> scene', scene);
-        console.log('"|_(ʘ_ʘ)_/" =>: WorkdayService -> workday', workday);
-        const data = {
-            ...workday,
-            scenes: [ ...workday.scenes, scene ],
-        };
+    async addScene(workdayId: string, sceneId: string): Promise<Workday> {
+        console.log('"|_(ʘ_ʘ)_/" =>: WorkdayService -> sceneId', sceneId);
+        const test = await this.workdayRepository.createQueryBuilder().relation('scenes')
+            .select();
+        console.log('"|_(ʘ_ʘ)_/" =>: WorkdayService -> test', test);
 
-        return this.workdayRepository.findOne(workdayId);
+        return this.findOne(workdayId);
     }
 
     // ================================================================================================================

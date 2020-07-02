@@ -35,6 +35,15 @@ export class RequisiteResolver {
 
     // ================================================================================================================
 
+    @Query(() => Requisite)
+    requisite(
+        @Args('id') id: string,
+    ): Promise<Requisite> {
+        return this.requisiteService.findOne(id);
+    }
+
+    // ================================================================================================================
+
     @Mutation(() => Requisite)
     async createRequisite(
         @Args('input') input: RequisiteCreateInput,
