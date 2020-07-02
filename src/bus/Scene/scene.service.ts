@@ -3,11 +3,14 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-// Instruments
+// Entities
 import { Scene } from './scene.entity';
-import { SceneCreateInput } from './scene.inputs';
 import { Project } from '../Project/project.entity';
 import { Workday } from '../Workday/workday.entity';
+import { Requisite } from '../Requisite/requisite.entity';
+
+// Instruments
+import { SceneCreateInput } from './scene.inputs';
 
 @Injectable()
 export class SceneService {
@@ -39,18 +42,6 @@ export class SceneService {
 
     // ================================================================================================================
 
-    findWorkdayScenes(workdayId: string): Promise<Scene[]> {
-        return this.sceneRepository.find({ where: { workdays: { id: workdayId }}});
-    }
-
-    // ================================================================================================================
-
-    findRequisiteScenes(requisiteId: string): Promise<Scene[]> {
-        return this.sceneRepository.find({ where: { requisites: { id: requisiteId }}});
-    }
-
-    // ================================================================================================================
-
     async findOne(id: string): Promise<Scene> {
         const scene = await this.sceneRepository.findOne(id);
 
@@ -71,9 +62,66 @@ export class SceneService {
     //     return this.projectRepository.save(data);
     // }
 
-    async deleteOne(id: string): Promise<string> {
-        await this.sceneRepository.delete(id);
+    async deleteOne(id: string): Promise<boolean> {
+        try {
+            await this.sceneRepository.delete(id);
 
-        return id;
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // ================================================================================================================
+    // Relations
+    // ================================================================================================================
+
+    async addRequisites(sceneId: string, requisitesIds: string[]): Promise<boolean> {
+        try {
+            await this.sceneRepository
+                .createQueryBuilder()
+                .relation('requisites')
+                .of(sceneId)
+                .add(requisitesIds);
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // ================================================================================================================
+
+    async removeRequisites(sceneId: string, requisitesIds: string[]): Promise<boolean> {
+        try {
+            await this.sceneRepository
+                .createQueryBuilder()
+                .relation('requisites')
+                .of(sceneId)
+                .remove(requisitesIds);
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // ================================================================================================================
+
+    findSceneRequisites(sceneId: string): Promise<Requisite[]> {
+        return this.sceneRepository
+            .createQueryBuilder()
+            .relation('requisites')
+            .of(sceneId)
+            .loadMany();
+    }
+    // ================================================================================================================
+
+    findSceneWorkdays(sceneId: string): Promise<Workday[]> {
+        return this.sceneRepository
+            .createQueryBuilder()
+            .relation('workdays')
+            .of(sceneId)
+            .loadMany();
     }
 }

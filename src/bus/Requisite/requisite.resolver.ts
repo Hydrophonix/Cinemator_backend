@@ -4,12 +4,12 @@ import { Inject } from '@nestjs/common';
 
 // Entities
 import { Requisite } from './requisite.entity';
+import { Project } from '../Project/project.entity';
 import { Scene } from '../Scene/scene.entity';
 
 // Services
 import { RequisiteService } from './requisite.service';
 import { ProjectService } from '../Project/project.service';
-import { SceneService } from '../Scene/scene.service';
 
 // Instruments
 import { RequisiteCreateInput } from './requisite.inputs';
@@ -19,8 +19,6 @@ export class RequisiteResolver {
     constructor(
         @Inject(ProjectService)
         private readonly projectService: ProjectService,
-        @Inject(SceneService)
-        private readonly sceneService: SceneService,
         private readonly requisiteService: RequisiteService,
     ) {}
 
@@ -71,9 +69,18 @@ export class RequisiteResolver {
     // ================================================================================================================
 
     @ResolveField()
+    project(
+        @Parent() { projectId }: Requisite,
+    ): Promise<Project> {
+        return this.projectService.findOne(projectId);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField()
     scenes(
         @Parent() { id }: Requisite,
     ): Promise<Scene[]> {
-        return this.sceneService.findRequisiteScenes(id);
+        return this.requisiteService.findRequisiteScenes(id);
     }
 }

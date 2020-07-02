@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Modules
 import { ProjectModule } from '../Project/project.module';
-import { SceneModule } from '../Scene/scene.module';
 
 // Instruments
 import { Requisite } from './requisite.entity';
@@ -14,10 +13,8 @@ import { RequisiteService } from './requisite.service';
     imports: [
         TypeOrmModule.forFeature([ Requisite ]),
         forwardRef(() => ProjectModule),
-        forwardRef(() => SceneModule),
 
     ],
     providers: [ RequisiteResolver, RequisiteService ],
-    exports:   [ RequisiteService ],
 })
 export class RequisiteModule {}
