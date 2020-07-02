@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { Project } from '../Project/project.entity';
 import { Workday } from './workday.entity';
 import { WorkdayCreateInput, WorkdayUpdateInput } from './workday.inputs';
+import { Scene } from '../Scene/scene.entity';
 
 @Injectable()
 export class WorkdayService {
@@ -56,6 +57,32 @@ export class WorkdayService {
         const data = {
             ...workday,
             ...input,
+        };
+
+        return this.workdayRepository.save(data);
+    }
+
+    // ================================================================================================================
+
+    addScene(workdayId: string, sceneId: string): Promise<Workday> {
+        console.log('"|_(ʘ_ʘ)_/" =>: WorkdayService -> scene', scene);
+        console.log('"|_(ʘ_ʘ)_/" =>: WorkdayService -> workday', workday);
+        const data = {
+            ...workday,
+            scenes: [ ...workday.scenes, scene ],
+        };
+
+        return this.workdayRepository.findOne(workdayId);
+    }
+
+    // ================================================================================================================
+
+    removeScene(workday: Workday, scene: Scene): Promise<Workday> {
+        console.log('"|_(ʘ_ʘ)_/" =>: WorkdayService -> Workday', Workday);
+        console.log('"|_(ʘ_ʘ)_/" =>: WorkdayService -> scene', scene);
+        const data = {
+            ...workday,
+            scenes: workday.scenes,
         };
 
         return this.workdayRepository.save(data);

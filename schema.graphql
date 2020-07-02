@@ -19,6 +19,8 @@ type Mutation {
   deleteScene(id: String!): Scene!
   createWorkday(projectId: String!, input: WorkdayCreateInput!): Workday!
   updateWorkday(id: String!, input: WorkdayUpdateInput!): Workday!
+  addSceneToWorkday(sceneId: String!, workdayId: String!): Workday!
+  removeSceneFromWorkday(sceneId: String!, workdayId: String!): Workday!
 
   """Create new project"""
   createProject(input: ProjectCreateInput!): Project!

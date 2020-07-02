@@ -66,6 +66,29 @@ export class WorkdayResolver {
     }
 
     // ================================================================================================================
+
+    @Mutation(() => Workday)
+    async addSceneToWorkday(
+        @Args('workdayId') workdayId: string,
+        @Args('sceneId') sceneId: string,  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<Workday> {
+        return this.workdayService.addScene(workdayId, sceneId);
+    }
+
+    // ================================================================================================================
+
+    @Mutation(() => Workday)
+    async removeSceneFromWorkday(
+        @Args('workdayId') workdayId: string,
+        @Args('sceneId') sceneId: string,  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<Workday> {
+        const workday = await this.workdayService.findOne(workdayId);
+        const scene = await this.sceneService.findOne(sceneId);
+
+        return this.workdayService.removeScene(workday, scene);
+    }
+
+    // ================================================================================================================
     // Relations
     // ================================================================================================================
 
