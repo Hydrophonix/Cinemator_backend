@@ -54,14 +54,11 @@ export class RequisiteResolver {
 
     // ================================================================================================================
 
-    @Mutation(() => Requisite)
+    @Mutation(() => Boolean)
     async deleteRequisite(
         @Args('id') id: string,
-    ): Promise<Requisite> {
-        const requisite = await this.requisiteService.findOne(id);
-        await this.requisiteService.deleteOne(id);
-
-        return requisite;
+    ): Promise<Boolean> {
+        return await this.requisiteService.deleteOne(id);
     }
 
     // ================================================================================================================

@@ -15,7 +15,7 @@ type AuthResponseWeb {
 type Mutation {
   createWorkday(projectId: String!, input: WorkdayCreateInput!): Workday!
   updateWorkday(id: String!, input: WorkdayUpdateInput!): Workday!
-  deleteWorkday(id: String!): Workday!
+  deleteWorkday(id: String!): Boolean!
   addScenesToWorkday(sceneIds: [String!]!, workdayId: String!): Boolean!
   removeScenesFromWorkday(sceneIds: [String!]!, workdayId: String!): Boolean!
   createScene(input: SceneCreateInput!, workdayId: String, projectId: String!): Scene!
@@ -28,7 +28,7 @@ type Mutation {
   loginWeb(input: AuthInput!): AuthResponseWeb!
   registerWeb(input: AuthInput!): AuthResponseWeb!
   createRequisite(projectId: String!, input: RequisiteCreateInput!): Requisite!
-  deleteRequisite(id: String!): Requisite!
+  deleteRequisite(id: String!): Boolean!
 }
 
 type Project {

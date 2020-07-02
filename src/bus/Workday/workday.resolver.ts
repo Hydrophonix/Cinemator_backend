@@ -65,14 +65,11 @@ export class WorkdayResolver {
 
     // ================================================================================================================
 
-    @Mutation(() => Workday)
+    @Mutation(() => Boolean)
     async deleteWorkday(
         @Args('id') id: string,
-    ): Promise<Workday> {
-        const workday = await this.workdayService.findOne(id);
-        await this.workdayService.deleteOne(id);
-
-        return workday;
+    ): Promise<Boolean> {
+        return await this.workdayService.deleteOne(id);
     }
 
     // ================================================================================================================

@@ -65,10 +65,10 @@ export class SceneResolver {
     // ================================================================================================================
 
     @Mutation(() => Boolean)
-    deleteScene(
+    async deleteScene(
         @Args('id') id: string,
     ): Promise<boolean> {
-        return this.sceneService.deleteOne(id);
+        return await this.sceneService.deleteOne(id);
     }
 
     // ================================================================================================================
