@@ -106,6 +106,26 @@ export class WorkdayService {
 
     // ================================================================================================================
 
+    async updateScenesRelation(
+        workdayId: string,
+        addSceneIds: string[],
+        removeSceneIds: string[],
+    ): Promise<boolean> {
+        try {
+            await this.workdayRepository
+                .createQueryBuilder()
+                .relation('scenes')
+                .of(workdayId)
+                .addAndRemove(addSceneIds, removeSceneIds);
+
+            return true;
+        } catch (error) {
+            throw new BadRequestException(`Add scenes to workday: ${workdayId} failed.`);
+        }
+    }
+
+    // ================================================================================================================
+
     findWorkdayScenes(workdayId: string): Promise<Scene[]> {
         return this.workdayRepository
             .createQueryBuilder()
@@ -113,6 +133,4 @@ export class WorkdayService {
             .of(workdayId)
             .loadMany();
     }
-
-    // ================================================================================================================
 }

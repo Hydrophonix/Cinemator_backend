@@ -1,6 +1,7 @@
 // Core
 import { Resolver, Query, Args, Mutation, Parent, ResolveField } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
+import _ from 'lodash';
 
 // Entities
 import { Workday } from './workday.entity';
@@ -12,7 +13,7 @@ import { WorkdayService } from './workday.service';
 import { ProjectService } from '../Project/project.service';
 
 // Instruments
-import { WorkdayCreateInput, WorkdayUpdateInput } from './workday.inputs';
+import { WorkdayCreateInput, WorkdayUpdateInput, WorkdayUpdateScenesResponce } from './workday.inputs';
 
 @Resolver(() => Workday)
 export class WorkdayResolver {
@@ -76,7 +77,31 @@ export class WorkdayResolver {
     // Relations
     // ================================================================================================================
 
-    @Mutation(() => Workday) // VALIK LOOK AT THIS!!!
+    @Mutation(() => WorkdayUpdateScenesResponce)
+    async updateWorkdayScenes(
+        @Args('workdayId') workdayId: string,
+        @Args('sceneIds', { type: () => [ String ] }) sceneIds: string[],  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<WorkdayUpdateScenesResponce> {
+        const currentScenes = await this.workdayService.findWorkdayScenes(workdayId);
+        const currentSceneIds = currentScenes.map(({ id }) => id);
+        const intersection = _.intersection(sceneIds, currentSceneIds);
+        const addSceneIds = _.difference(sceneIds, intersection);
+        const removeSceneIds = _.difference(currentSceneIds, intersection);
+
+        await this.workdayService.updateScenesRelation(workdayId, addSceneIds, removeSceneIds);
+
+        const workday = await this.workdayService.findOne(workdayId);
+        const scenes = await this.workdayService.findWorkdayScenes(workdayId);
+
+        return {
+            workday,
+            scenes,
+        };
+    }
+
+    // ================================================================================================================
+
+    @Mutation(() => Workday)
     async addScenesToWorkday(
         @Args('workdayId') workdayId: string,
         @Args('sceneIds', { type: () => [ String ] }) sceneIds: string[],  // eslint-disable-line @typescript-eslint/indent

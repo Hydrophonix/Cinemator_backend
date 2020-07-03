@@ -16,6 +16,7 @@ type Mutation {
   createWorkday(projectId: String!, input: WorkdayCreateInput!): Workday!
   updateWorkday(id: String!, input: WorkdayUpdateInput!): Workday!
   deleteWorkday(id: String!): Boolean!
+  updateWorkdayScenes(sceneIds: [String!]!, workdayId: String!): WorkdayUpdateScenesResponce!
   addScenesToWorkday(sceneIds: [String!]!, workdayId: String!): Workday!
   removeScenesFromWorkday(sceneIds: [String!]!, workdayId: String!): Boolean!
   createScene(input: SceneCreateInput!, workdayId: String, projectId: String!): Scene!
@@ -128,4 +129,9 @@ input WorkdayCreateInput {
 input WorkdayUpdateInput {
   title: String
   date: String
+}
+
+type WorkdayUpdateScenesResponce {
+  workday: Workday!
+  scenes: [Scene!]!
 }
