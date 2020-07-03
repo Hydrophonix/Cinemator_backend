@@ -16,5 +16,6 @@ import { RequisiteService } from './requisite.service';
 
     ],
     providers: [ RequisiteResolver, RequisiteService ],
+    exports:   [ RequisiteService ],
 })
 export class RequisiteModule {}

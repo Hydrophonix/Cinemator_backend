@@ -1,6 +1,10 @@
 // Core
-import { InputType, Field, Int } from '@nestjs/graphql';
+import { InputType, Field, Int, ObjectType } from '@nestjs/graphql';
 import { IsNumber } from 'class-validator';
+
+// Entities
+import { Scene } from './scene.entity';
+import { Requisite } from '../Requisite/requisite.entity';
 
 @InputType()
 export class SceneCreateInput {
@@ -13,6 +17,15 @@ export class SceneCreateInput {
     @Field(() => Int)
     @IsNumber()
     sceneNumber: number;
+}
+
+@ObjectType()
+export class SceneUpdateRequisitesResponse {
+    @Field(() => Scene)
+    updatedScene: Scene;
+
+    @Field(() => [ Requisite ])
+    updatedRequisites: Requisite[];
 }
 
 // @InputType()

@@ -11,13 +11,16 @@ import { Scene } from '../Scene/scene.entity';
 // Services
 import { WorkdayService } from './workday.service';
 import { ProjectService } from '../Project/project.service';
+import { SceneService } from '../Scene/scene.service';
 
 // Instruments
-import { WorkdayCreateInput, WorkdayUpdateInput, WorkdayUpdateScenesResponce } from './workday.inputs';
+import { WorkdayCreateInput, WorkdayUpdateInput, WorkdayUpdateScenesResponse } from './workday.inputs';
 
 @Resolver(() => Workday)
 export class WorkdayResolver {
     constructor(
+        @Inject(SceneService)
+        private readonly sceneService: SceneService,
         @Inject(ProjectService)
         private readonly projectService: ProjectService,
         private readonly workdayService: WorkdayService,
@@ -77,11 +80,11 @@ export class WorkdayResolver {
     // Relations
     // ================================================================================================================
 
-    @Mutation(() => WorkdayUpdateScenesResponce)
+    @Mutation(() => WorkdayUpdateScenesResponse)
     async updateWorkdayScenes(
         @Args('workdayId') workdayId: string,
         @Args('sceneIds', { type: () => [ String ] }) sceneIds: string[],  // eslint-disable-line @typescript-eslint/indent
-    ): Promise<WorkdayUpdateScenesResponce> {
+    ): Promise<WorkdayUpdateScenesResponse> {
         const currentScenes = await this.workdayService.findWorkdayScenes(workdayId);
         const currentSceneIds = currentScenes.map(({ id }) => id);
         const intersection = _.intersection(sceneIds, currentSceneIds);
@@ -90,12 +93,12 @@ export class WorkdayResolver {
 
         await this.workdayService.updateScenesRelation(workdayId, addSceneIds, removeSceneIds);
 
-        const workday = await this.workdayService.findOne(workdayId);
-        const scenes = await this.workdayService.findWorkdayScenes(workdayId);
+        const updatedWorkday = await this.workdayService.findOne(workdayId);
+        const updatedScenes = await this.sceneService.findManyByIds([ ...addSceneIds, ...removeSceneIds ]);
 
         return {
-            workday,
-            scenes,
+            updatedWorkday,
+            updatedScenes,
         };
     }
 

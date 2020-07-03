@@ -27,10 +27,10 @@ export class WorkdayUpdateInput {
 }
 
 @ObjectType()
-export class WorkdayUpdateScenesResponce {
+export class WorkdayUpdateScenesResponse {
     @Field(() => Workday)
-    workday: Workday;
+    updatedWorkday: Workday;
 
     @Field(() => [ Scene ])
-    scenes: Scene[];
+    updatedScenes: Scene[];
 }

@@ -1,6 +1,7 @@
 // Core
 import { Resolver, Query, Args, Mutation, ResolveField, Parent } from '@nestjs/graphql';
 import { Inject } from '@nestjs/common';
+import _ from 'lodash';
 
 // Entities
 import { Scene } from './scene.entity';
@@ -12,9 +13,10 @@ import { Requisite } from '../Requisite/requisite.entity';
 import { SceneService } from './scene.service';
 import { ProjectService } from '../Project/project.service';
 import { WorkdayService } from '../Workday/workday.service';
+import { RequisiteService } from '../Requisite/requisite.service';
 
 // Instruments
-import { SceneCreateInput } from './scene.inputs';
+import { SceneCreateInput, SceneUpdateRequisitesResponse } from './scene.inputs';
 
 @Resolver(() => Scene)
 export class SceneResolver {
@@ -23,6 +25,8 @@ export class SceneResolver {
         private readonly projectService: ProjectService,
         @Inject(WorkdayService)
         private readonly workdayService: WorkdayService,
+        @Inject(RequisiteService)
+        private readonly requisiteService: RequisiteService,
         private readonly sceneService: SceneService,
     ) {}
 
@@ -40,7 +44,7 @@ export class SceneResolver {
     scene(
         @Args('id') id: string,
     ): Promise<Scene> {
-        return this.sceneService.findOne(id);
+        return this.sceneService.findOneById(id);
     }
 
     // ================================================================================================================
@@ -74,6 +78,28 @@ export class SceneResolver {
     // ================================================================================================================
     // Relations
     // ================================================================================================================
+
+    @Mutation(() => SceneUpdateRequisitesResponse)
+    async updateSceneRequisites(
+        @Args('sceneId') sceneId: string,
+        @Args('requisiteIds', { type: () => [ String ] }) requisiteIds: string[],  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<SceneUpdateRequisitesResponse> {
+        const currentRequsites = await this.sceneService.findSceneRequisites(sceneId);
+        const currentRequisiteIds = currentRequsites.map(({ id }) => id);
+        const intersection = _.intersection(requisiteIds, currentRequisiteIds);
+        const addRequisiteIds = _.difference(requisiteIds, intersection);
+        const removeRequisiteIds = _.difference(currentRequisiteIds, intersection);
+
+        await this.sceneService.updateRequisitesRelation(sceneId, addRequisiteIds, removeRequisiteIds);
+
+        const updatedScene = await this.sceneService.findOneById(sceneId);
+        const updatedRequisites = await this.requisiteService.findManyByIds([ ...addRequisiteIds, ...removeRequisiteIds ]);
+
+        return {
+            updatedScene,
+            updatedRequisites,
+        };
+    }
 
     @ResolveField()
     project(

@@ -16,11 +16,14 @@ type Mutation {
   createWorkday(projectId: String!, input: WorkdayCreateInput!): Workday!
   updateWorkday(id: String!, input: WorkdayUpdateInput!): Workday!
   deleteWorkday(id: String!): Boolean!
-  updateWorkdayScenes(sceneIds: [String!]!, workdayId: String!): WorkdayUpdateScenesResponce!
+  updateWorkdayScenes(sceneIds: [String!]!, workdayId: String!): WorkdayUpdateScenesResponse!
   addScenesToWorkday(sceneIds: [String!]!, workdayId: String!): Workday!
   removeScenesFromWorkday(sceneIds: [String!]!, workdayId: String!): Boolean!
+  createRequisite(projectId: String!, input: RequisiteCreateInput!): Requisite!
+  deleteRequisite(id: String!): Boolean!
   createScene(input: SceneCreateInput!, workdayId: String, projectId: String!): Scene!
   deleteScene(id: String!): Boolean!
+  updateSceneRequisites(requisiteIds: [String!]!, sceneId: String!): SceneUpdateRequisitesResponse!
 
   """Create new project"""
   createProject(input: ProjectCreateInput!): Project!
@@ -28,8 +31,6 @@ type Mutation {
   deleteProject(id: String!): String!
   loginWeb(input: AuthInput!): AuthResponseWeb!
   registerWeb(input: AuthInput!): AuthResponseWeb!
-  createRequisite(projectId: String!, input: RequisiteCreateInput!): Requisite!
-  deleteRequisite(id: String!): Boolean!
 }
 
 type Project {
@@ -60,13 +61,13 @@ input ProjectUpdateInput {
 type Query {
   workdays(projectId: String!): [Workday!]!
   workday(id: String!): Workday!
+  requisites(projectId: String!): [Requisite!]!
+  requisite(id: String!): Requisite!
   scenes(projectId: String!): [Scene!]!
   scene(id: String!): Scene!
   ownedProjects: [Project!]!
   me: User!
   users: [User!]!
-  requisites(projectId: String!): [Requisite!]!
-  requisite(id: String!): Requisite!
 }
 
 type Requisite {
@@ -104,6 +105,11 @@ input SceneCreateInput {
   sceneNumber: Int!
 }
 
+type SceneUpdateRequisitesResponse {
+  updatedScene: Scene!
+  updatedRequisites: [Requisite!]!
+}
+
 type User {
   id: ID!
   email: String!
@@ -131,7 +137,7 @@ input WorkdayUpdateInput {
   date: String
 }
 
-type WorkdayUpdateScenesResponce {
-  workday: Workday!
-  scenes: [Scene!]!
+type WorkdayUpdateScenesResponse {
+  updatedWorkday: Workday!
+  updatedScenes: [Scene!]!
 }

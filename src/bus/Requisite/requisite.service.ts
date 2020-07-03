@@ -48,6 +48,16 @@ export class RequisiteService {
     }
 
     // ================================================================================================================
+
+    async findManyByIds(requisitesIds: Array<string>): Promise<Requisite[]> {
+        if (requisitesIds.length === 0) {
+            return [];
+        }
+
+        return await this.requisiteRepository.findByIds(requisitesIds);
+    }
+
+    // ================================================================================================================
     // updateOne(scene: Project, input: sce): Promise<Project> {
     //     const data = {
     //         ...scene,

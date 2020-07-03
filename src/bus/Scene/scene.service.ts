@@ -42,7 +42,7 @@ export class SceneService {
 
     // ================================================================================================================
 
-    async findOne(id: string): Promise<Scene> {
+    async findOneById(id: string): Promise<Scene> {
         const scene = await this.sceneRepository.findOne(id);
 
         if (!scene) {
@@ -50,6 +50,15 @@ export class SceneService {
         }
 
         return scene;
+    }
+    // ================================================================================================================
+
+    async findManyByIds(scenesIds: Array<string>): Promise<Scene[]> {
+        if (scenesIds.length === 0) {
+            return [];
+        }
+
+        return await this.sceneRepository.findByIds(scenesIds);
     }
 
     // ================================================================================================================
@@ -75,6 +84,24 @@ export class SceneService {
     // ================================================================================================================
     // Relations
     // ================================================================================================================
+
+    async updateRequisitesRelation(
+        sceneId: string,
+        addRequisiteIds: string[],
+        removeRequisiteIds: string[],
+    ): Promise<boolean> {
+        try {
+            await this.sceneRepository
+                .createQueryBuilder()
+                .relation('requisites')
+                .of(sceneId)
+                .addAndRemove(addRequisiteIds, removeRequisiteIds);
+
+            return true;
+        } catch (error) {
+            throw new BadRequestException(`Add requisites to scene: ${sceneId} failed.`);
+        }
+    }
 
     async addRequisites(sceneId: string, requisitesIds: string[]): Promise<boolean> {
         try {
