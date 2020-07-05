@@ -42,9 +42,9 @@ export class SceneResolver {
 
     @Query(() => Scene)
     scene(
-        @Args('id') id: string,
+        @Args('sceneId') sceneId: string,
     ): Promise<Scene> {
-        return this.sceneService.findOneById(id);
+        return this.sceneService.findOneById(sceneId);
     }
 
     // ================================================================================================================
@@ -70,9 +70,9 @@ export class SceneResolver {
 
     @Mutation(() => Boolean)
     async deleteScene(
-        @Args('id') id: string,
+        @Args('sceneId') sceneId: string,
     ): Promise<boolean> {
-        return await this.sceneService.deleteOne(id);
+        return await this.sceneService.deleteOne(sceneId);
     }
 
     // ================================================================================================================

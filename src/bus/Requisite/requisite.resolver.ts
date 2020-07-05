@@ -35,9 +35,9 @@ export class RequisiteResolver {
 
     @Query(() => Requisite)
     requisite(
-        @Args('id') id: string,
+        @Args('requisiteId') requisiteId: string,
     ): Promise<Requisite> {
-        return this.requisiteService.findOne(id);
+        return this.requisiteService.findOne(requisiteId);
     }
 
     // ================================================================================================================
@@ -56,9 +56,9 @@ export class RequisiteResolver {
 
     @Mutation(() => Boolean)
     async deleteRequisite(
-        @Args('id') id: string,
+        @Args('requisiteId') requisiteId: string,
     ): Promise<Boolean> {
-        return await this.requisiteService.deleteOne(id);
+        return await this.requisiteService.deleteOne(requisiteId);
     }
 
     // ================================================================================================================

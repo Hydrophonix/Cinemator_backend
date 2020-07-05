@@ -38,9 +38,9 @@ export class WorkdayResolver {
 
     @Query(() => Workday)
     workday(
-        @Args('id') id: string,
+        @Args('workdayId') workdayId: string,
     ): Promise<Workday> {
-        return this.workdayService.findOne(id);
+        return this.workdayService.findOne(workdayId);
     }
 
     // ================================================================================================================
@@ -60,9 +60,9 @@ export class WorkdayResolver {
     @Mutation(() => Workday)
     async updateWorkday(
         @Args('input') input: WorkdayUpdateInput,
-        @Args('id') id: string,  // eslint-disable-line @typescript-eslint/indent
+        @Args('workdayId') workdayId: string,  // eslint-disable-line @typescript-eslint/indent
     ): Promise<Workday> {
-        const workday = await this.workdayService.findOne(id);
+        const workday = await this.workdayService.findOne(workdayId);
 
         return this.workdayService.updateOne(workday, input);
     }
@@ -71,9 +71,9 @@ export class WorkdayResolver {
 
     @Mutation(() => Boolean)
     async deleteWorkday(
-        @Args('id') id: string,
+        @Args('workdayId') workdayId: string,
     ): Promise<Boolean> {
-        return await this.workdayService.deleteOne(id);
+        return await this.workdayService.deleteOne(workdayId);
     }
 
     // ================================================================================================================
