@@ -9,7 +9,7 @@ import { Project } from '../Project/project.entity';
 import { Requisite } from './requisite.entity';
 
 // Instruments
-import { RequisiteCreateInput } from './requisite.inputs';
+import { RequisiteCreateInput, RequisiteUpdateInput } from './requisite.inputs';
 
 @Injectable()
 export class RequisiteService {
@@ -37,8 +37,8 @@ export class RequisiteService {
 
     // ================================================================================================================
 
-    async findOne(id: string): Promise<Requisite> {
-        const requisite = await this.requisiteRepository.findOne(id);
+    async findOneById(requisiteId: string): Promise<Requisite> {
+        const requisite = await this.requisiteRepository.findOne(requisiteId);
 
         if (!requisite) {
             throw new BadRequestException('Requisite does not exist');
@@ -49,23 +49,26 @@ export class RequisiteService {
 
     // ================================================================================================================
 
-    async findManyByIds(requisitesIds: Array<string>): Promise<Requisite[]> {
-        if (requisitesIds.length === 0) {
+    async findManyByIds(requisiteIds: Array<string>): Promise<Requisite[]> {
+        if (requisiteIds.length === 0) {
             return [];
         }
 
-        return await this.requisiteRepository.findByIds(requisitesIds);
+        return await this.requisiteRepository.findByIds(requisiteIds);
     }
 
     // ================================================================================================================
-    // updateOne(scene: Project, input: sce): Promise<Project> {
-    //     const data = {
-    //         ...scene,
-    //         ...input,
-    //     };
 
-    //     return this.projectRepository.save(data);
-    // }
+    updateOne(requisite: Requisite, input: RequisiteUpdateInput): Promise<Requisite> {
+        const data: Partial<Requisite> = {
+            ...requisite,
+            ...input,
+        };
+
+        return this.requisiteRepository.save(data);
+    }
+
+    // ================================================================================================================
 
     async deleteOne(id: string): Promise<boolean> {
         try {

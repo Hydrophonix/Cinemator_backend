@@ -31,7 +31,7 @@ export class WorkdayService {
 
     // ================================================================================================================
 
-    async findOne(id: string): Promise<Workday> {
+    async findOneById(id: string): Promise<Workday> {
         const workday = await this.workdayRepository.findOne(id);
 
         if (!workday) {
@@ -44,7 +44,7 @@ export class WorkdayService {
     // ================================================================================================================
 
     updateOne(workday: Workday, input: WorkdayUpdateInput): Promise<Workday> {
-        const data = {
+        const data: Partial<Workday> = {
             ...workday,
             ...input,
         };

@@ -10,7 +10,7 @@ import { Workday } from '../Workday/workday.entity';
 import { Requisite } from '../Requisite/requisite.entity';
 
 // Instruments
-import { SceneCreateInput } from './scene.inputs';
+import { SceneCreateInput, SceneUpdateInput } from './scene.inputs';
 
 @Injectable()
 export class SceneService {
@@ -62,14 +62,17 @@ export class SceneService {
     }
 
     // ================================================================================================================
-    // updateOne(scene: Project, input: sce): Promise<Project> {
-    //     const data = {
-    //         ...scene,
-    //         ...input,
-    //     };
 
-    //     return this.projectRepository.save(data);
-    // }
+    updateOne(scene: Scene, input: SceneUpdateInput): Promise<Scene> {
+        const data: Partial<Scene> = {
+            ...scene,
+            ...input,
+        };
+
+        return this.sceneRepository.save(data);
+    }
+
+    // ================================================================================================================
 
     async deleteOne(id: string): Promise<boolean> {
         try {

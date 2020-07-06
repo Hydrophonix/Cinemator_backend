@@ -69,13 +69,12 @@ export class ProjectResolver {
 
     // ================================================================================================================
 
-    @Mutation(() => String)
-    async deleteProject(
+    @Mutation(() => Boolean)
+    @UseGuards(AuthGuard)
+    deleteProject(
         @Args('id') id: string,
-    ): Promise<string> {
-        await this.projectService.deleteOne(id);
-
-        return id;
+    ): Promise<boolean> {
+        return this.projectService.deleteOne(id);
     }
 
     // ================================================================================================================

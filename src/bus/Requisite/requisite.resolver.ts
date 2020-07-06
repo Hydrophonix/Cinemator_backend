@@ -12,7 +12,7 @@ import { RequisiteService } from './requisite.service';
 import { ProjectService } from '../Project/project.service';
 
 // Instruments
-import { RequisiteCreateInput } from './requisite.inputs';
+import { RequisiteCreateInput, RequisiteUpdateInput } from './requisite.inputs';
 
 @Resolver(() => Requisite)
 export class RequisiteResolver {
@@ -37,7 +37,7 @@ export class RequisiteResolver {
     requisite(
         @Args('requisiteId') requisiteId: string,
     ): Promise<Requisite> {
-        return this.requisiteService.findOne(requisiteId);
+        return this.requisiteService.findOneById(requisiteId);
     }
 
     // ================================================================================================================
@@ -50,6 +50,18 @@ export class RequisiteResolver {
         const project = await this.projectService.findOne(projectId);
 
         return this.requisiteService.createOne(input, project);
+    }
+
+    // ================================================================================================================
+
+    @Mutation(() => Requisite)
+    async updateRequisite(
+        @Args('input') input: RequisiteUpdateInput,
+        @Args('requisiteId') requisiteId: string,  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<Requisite> {
+        const requisite = await this.requisiteService.findOneById(requisiteId);
+
+        return this.requisiteService.updateOne(requisite, input);
     }
 
     // ================================================================================================================

@@ -21,9 +21,9 @@ export class WorkdayUpdateInput {
     @Field(() => String, { nullable: true })
     title?: string;
 
-    @Field(() => String, { nullable: true })
-    @IsISO8601()
-    date?: string;
+    // @Field(() => String, { nullable: true })
+    // @IsISO8601()
+    // date?: string;
 }
 
 @ObjectType()

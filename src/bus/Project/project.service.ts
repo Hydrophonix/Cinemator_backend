@@ -52,7 +52,7 @@ export class ProjectService {
     // ================================================================================================================
 
     updateOne(project: Project, input: ProjectUpdateInput): Promise<Project> {
-        const data = {
+        const data: Partial<Project> = {
             ...project,
             ...input,
         };
@@ -62,9 +62,13 @@ export class ProjectService {
 
     // ================================================================================================================
 
-    async deleteOne(id: string): Promise<string> {
-        await this.projectRepository.delete(id);
+    async deleteOne(id: string): Promise<boolean> {
+        try {
+            await this.projectRepository.delete(id);
 
-        return id;
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }

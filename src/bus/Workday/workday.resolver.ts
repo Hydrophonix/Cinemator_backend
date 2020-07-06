@@ -40,7 +40,7 @@ export class WorkdayResolver {
     workday(
         @Args('workdayId') workdayId: string,
     ): Promise<Workday> {
-        return this.workdayService.findOne(workdayId);
+        return this.workdayService.findOneById(workdayId);
     }
 
     // ================================================================================================================
@@ -62,7 +62,7 @@ export class WorkdayResolver {
         @Args('input') input: WorkdayUpdateInput,
         @Args('workdayId') workdayId: string,  // eslint-disable-line @typescript-eslint/indent
     ): Promise<Workday> {
-        const workday = await this.workdayService.findOne(workdayId);
+        const workday = await this.workdayService.findOneById(workdayId);
 
         return this.workdayService.updateOne(workday, input);
     }
@@ -93,7 +93,7 @@ export class WorkdayResolver {
 
         await this.workdayService.updateScenesRelation(workdayId, addSceneIds, removeSceneIds);
 
-        const updatedWorkday = await this.workdayService.findOne(workdayId);
+        const updatedWorkday = await this.workdayService.findOneById(workdayId);
         const updatedScenes = await this.sceneService.findManyByIds([ ...addSceneIds, ...removeSceneIds ]);
 
         return {
@@ -115,7 +115,7 @@ export class WorkdayResolver {
             throw new Error(`Add scenes to workday: ${workdayId} failed.`);
         }
 
-        return this.workdayService.findOne(workdayId);
+        return this.workdayService.findOneById(workdayId);
     }
 
     // ================================================================================================================

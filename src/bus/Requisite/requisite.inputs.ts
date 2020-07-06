@@ -21,17 +21,21 @@ export class RequisiteCreateInput {
     pricePerDay?: number;
 }
 
-// @InputType()
-// export class SceneUpdateInput {
-//     @Field(() => String, { nullable: true })
-//     @IsNotEmpty()
-//     title?: string;
+@InputType()
+export class RequisiteUpdateInput {
+    @Field(() => String, { nullable: true })
+    @IsString()
+    title?: string;
 
-//     @Field(() => String, { nullable: true })
-//     @IsISO8601()
-//     startDay?: string;
+    @Field(() => String, { nullable: true })
+    @IsString()
+    description?: string;
 
-//     @Field(() => String, { nullable: true })
-//     @IsISO8601()
-//     endDay?: string;
-// }
+    @Field(() => Boolean, { nullable: true })
+    @IsBoolean()
+    isOrdered?: boolean;
+
+    @Field(() => Int, { nullable: true })
+    @IsNumber()
+    pricePerDay?: number;
+}

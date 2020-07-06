@@ -19,6 +19,19 @@ export class SceneCreateInput {
     sceneNumber: number;
 }
 
+@InputType()
+export class SceneUpdateInput {
+    @Field(() => String, { nullable: true })
+    title?: string;
+
+    @Field(() => String, { nullable: true })
+    location?: string;
+
+    @Field(() => Int, { nullable: true })
+    @IsNumber()
+    sceneNumber?: number;
+}
+
 @ObjectType()
 export class SceneUpdateRequisitesResponse {
     @Field(() => Scene)
@@ -27,18 +40,3 @@ export class SceneUpdateRequisitesResponse {
     @Field(() => [ Requisite ])
     updatedRequisites: Requisite[];
 }
-
-// @InputType()
-// export class SceneUpdateInput {
-//     @Field(() => String, { nullable: true })
-//     @IsNotEmpty()
-//     title?: string;
-
-//     @Field(() => String, { nullable: true })
-//     @IsISO8601()
-//     startDay?: string;
-
-//     @Field(() => String, { nullable: true })
-//     @IsISO8601()
-//     endDay?: string;
-// }

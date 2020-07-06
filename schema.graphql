@@ -20,15 +20,17 @@ type Mutation {
   addScenesToWorkday(sceneIds: [String!]!, workdayId: String!): Workday!
   removeScenesFromWorkday(sceneIds: [String!]!, workdayId: String!): Boolean!
   createRequisite(projectId: String!, input: RequisiteCreateInput!): Requisite!
+  updateRequisite(requisiteId: String!, input: RequisiteUpdateInput!): Requisite!
   deleteRequisite(requisiteId: String!): Boolean!
   createScene(input: SceneCreateInput!, workdayId: String, projectId: String!): Scene!
+  updateScene(sceneId: String!, input: SceneUpdateInput!): Scene!
   deleteScene(sceneId: String!): Boolean!
   updateSceneRequisites(requisiteIds: [String!]!, sceneId: String!): SceneUpdateRequisitesResponse!
 
   """Create new project"""
   createProject(input: ProjectCreateInput!): Project!
   updateProject(input: ProjectUpdateInput!, id: String!): Project!
-  deleteProject(id: String!): String!
+  deleteProject(id: String!): Boolean!
   loginWeb(input: AuthInput!): AuthResponseWeb!
   registerWeb(input: AuthInput!): AuthResponseWeb!
 }
@@ -88,6 +90,13 @@ input RequisiteCreateInput {
   pricePerDay: Int = 0
 }
 
+input RequisiteUpdateInput {
+  title: String
+  description: String
+  isOrdered: Boolean
+  pricePerDay: Int
+}
+
 type Scene {
   id: ID!
   title: String
@@ -103,6 +112,12 @@ input SceneCreateInput {
   title: String
   location: String
   sceneNumber: Int!
+}
+
+input SceneUpdateInput {
+  title: String
+  location: String
+  sceneNumber: Int
 }
 
 type SceneUpdateRequisitesResponse {
@@ -134,7 +149,6 @@ input WorkdayCreateInput {
 
 input WorkdayUpdateInput {
   title: String
-  date: String
 }
 
 type WorkdayUpdateScenesResponse {

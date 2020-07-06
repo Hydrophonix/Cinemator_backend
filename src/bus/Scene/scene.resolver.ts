@@ -16,7 +16,7 @@ import { WorkdayService } from '../Workday/workday.service';
 import { RequisiteService } from '../Requisite/requisite.service';
 
 // Instruments
-import { SceneCreateInput, SceneUpdateRequisitesResponse } from './scene.inputs';
+import { SceneCreateInput, SceneUpdateRequisitesResponse, SceneUpdateInput } from './scene.inputs';
 
 @Resolver(() => Scene)
 export class SceneResolver {
@@ -58,12 +58,24 @@ export class SceneResolver {
         const project = await this.projectService.findOne(projectId);
 
         if (workdayId) {
-            const workday = await this.workdayService.findOne(workdayId);
+            const workday = await this.workdayService.findOneById(workdayId);
 
             return this.sceneService.createOne(input, project, workday);
         }
 
         return this.sceneService.createOne(input, project);
+    }
+
+    // ================================================================================================================
+
+    @Mutation(() => Scene)
+    async updateScene(
+        @Args('input') input: SceneUpdateInput,
+        @Args('sceneId') sceneId: string,  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<Scene> {
+        const scene = await this.sceneService.findOneById(sceneId);
+
+        return this.sceneService.updateOne(scene, input);
     }
 
     // ================================================================================================================
@@ -93,7 +105,9 @@ export class SceneResolver {
         await this.sceneService.updateRequisitesRelation(sceneId, addRequisiteIds, removeRequisiteIds);
 
         const updatedScene = await this.sceneService.findOneById(sceneId);
-        const updatedRequisites = await this.requisiteService.findManyByIds([ ...addRequisiteIds, ...removeRequisiteIds ]);
+        const updatedRequisites = await this.requisiteService.findManyByIds(
+            [ ...addRequisiteIds, ...removeRequisiteIds ],
+        );
 
         return {
             updatedScene,
