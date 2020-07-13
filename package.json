@@ -1,7 +1,7 @@
 {
-    "name": "portfolio-backend",
+    "name": "cinemator-backend",
     "version": "1.0.0",
-    "description": "Portfolio",
+    "description": "Cinemator",
     "author": "hydrophonixfx@gmail.com",
     "license": "UNLICENSED",
     "private": true,
