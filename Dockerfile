@@ -10,4 +10,4 @@ RUN apk add curl
 
 EXPOSE 4000
 
-CMD ["node", "index.js"]
+CMD ["node", "main.js"]
