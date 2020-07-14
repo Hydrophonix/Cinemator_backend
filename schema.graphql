@@ -29,8 +29,8 @@ type Mutation {
 
   """Create new project"""
   createProject(input: ProjectCreateInput!): Project!
-  updateProject(input: ProjectUpdateInput!, id: String!): Project!
-  deleteProject(id: String!): Boolean!
+  updateProject(input: ProjectUpdateInput!, projectId: String!): Project!
+  deleteProject(projectId: String!): Boolean!
   loginWeb(input: AuthInput!): AuthResponseWeb!
   registerWeb(input: AuthInput!): AuthResponseWeb!
 }

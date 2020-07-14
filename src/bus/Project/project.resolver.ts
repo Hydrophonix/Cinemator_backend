@@ -59,10 +59,10 @@ export class ProjectResolver {
     @Mutation(() => Project)
     @UseGuards(AuthGuard)
     async updateProject(
-        @Args('id') id: string,
+        @Args('projectId') projectId: string,
         @Args('input') input: ProjectUpdateInput, // eslint-disable-line @typescript-eslint/indent
     ): Promise<Project> {
-        const project = await this.projectService.findOne(id);
+        const project = await this.projectService.findOne(projectId);
 
         return await this.projectService.updateOne(project, input);
     }
@@ -72,9 +72,9 @@ export class ProjectResolver {
     @Mutation(() => Boolean)
     @UseGuards(AuthGuard)
     deleteProject(
-        @Args('id') id: string,
+        @Args('projectId') projectId: string,
     ): Promise<boolean> {
-        return this.projectService.deleteOne(id);
+        return this.projectService.deleteOne(projectId);
     }
 
     // ================================================================================================================
