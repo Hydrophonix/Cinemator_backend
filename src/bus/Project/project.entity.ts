@@ -7,6 +7,7 @@ import { User } from '../User/user.entity';
 import { Scene } from '../Scene/scene.entity';
 import { Requisite } from '../Requisite/requisite.entity';
 import { Workday } from '../Workday/workday.entity';
+import { Location } from '../Location/location.entity';
 
 @ObjectType()
 @Entity()
@@ -23,13 +24,13 @@ export class Project extends BaseEntity {
     @Column('text', { nullable: true })
     description?: string;
 
-    @Field()
-    @Column('date')
-    startDay: string;
+    // @Field()
+    // @Column('date')
+    // startDay: string;
 
-    @Field()
-    @Column('date')
-    endDay: string;
+    // @Field()
+    // @Column('date')
+    // endDay: string;
 
     // ================================================================================================================
     // Relations
@@ -47,6 +48,10 @@ export class Project extends BaseEntity {
     @Field(() => [ Workday ])
     @OneToMany(() => Scene, (workday: Workday) => workday.projectId, { onDelete: 'CASCADE' })
     workdays: [ Workday ]
+
+    @Field(() => [ Location ])
+    @OneToMany(() => Location, (location: Location) => location.projectId, { onDelete: 'CASCADE' })
+    locations: [ Location ]
 
     @Field(() => [ Scene ])
     @OneToMany(() => Scene, (scene: Scene) => scene.projectId, { onDelete: 'CASCADE' })

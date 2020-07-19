@@ -6,13 +6,17 @@ import { UseGuards, Inject } from '@nestjs/common';
 import { Project } from './project.entity';
 import { User } from '../User/user.entity';
 import { Workday } from '../Workday/workday.entity';
+import { Location } from '../Location/location.entity';
 import { Scene } from '../Scene/scene.entity';
+import { Requisite } from '../Requisite/requisite.entity';
 
 // Services
 import { ProjectService } from './project.service';
 import { UserService } from '../User/user.service';
 import { WorkdayService } from '../Workday/workday.service';
 import { SceneService } from '../Scene/scene.service';
+import { LocationService } from '../Location/location.service';
+import { RequisiteService } from '../Requisite/requisite.service';
 
 // Instruments
 import { IContextUser } from '../../graphql/graphql.interfaces';
@@ -23,14 +27,19 @@ import { ProjectCreateInput, ProjectUpdateInput } from './project.inputs';
 
 @Resolver(() => Project)
 export class ProjectResolver {
+    // eslint-disable-next-line max-params
     constructor(
+        private readonly projectService: ProjectService,
         @Inject(UserService)
         private readonly userService: UserService,
         @Inject(WorkdayService)
         private readonly workdayService: WorkdayService,
         @Inject(SceneService)
         private readonly sceneService: SceneService,
-        private readonly projectService: ProjectService,
+        @Inject(LocationService)
+        private readonly locationService: LocationService,
+        @Inject(RequisiteService)
+        private readonly requisiteService: RequisiteService,
     ) {}
 
     // ================================================================================================================
@@ -100,9 +109,27 @@ export class ProjectResolver {
     // ================================================================================================================
 
     @ResolveField()
+    locations(
+        @Parent() { id }: Project,
+    ): Promise<Location[]> {
+        return this.locationService.findProjectLocations(id);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField()
     scenes(
         @Parent() { id }: Project,
     ): Promise<Scene[]> {
         return this.sceneService.findProjectScenes(id);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField()
+    requisites(
+        @Parent() { id }: Project,
+    ): Promise<Requisite[]> {
+        return this.requisiteService.findProjectRequisites(id);
     }
 }

@@ -19,11 +19,11 @@ import { WorkdayCreateInput, WorkdayUpdateInput, WorkdayUpdateScenesResponse } f
 @Resolver(() => Workday)
 export class WorkdayResolver {
     constructor(
+        private readonly workdayService: WorkdayService,
         @Inject(SceneService)
         private readonly sceneService: SceneService,
         @Inject(ProjectService)
         private readonly projectService: ProjectService,
-        private readonly workdayService: WorkdayService,
     ) {}
 
     // ================================================================================================================

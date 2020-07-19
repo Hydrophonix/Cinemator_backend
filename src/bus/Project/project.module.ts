@@ -6,7 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../Auth/auth.module';
 import { UserModule } from '../User/user.module';
 import { WorkdayModule } from '../Workday/workday.module';
+import { LocationModule } from '../Location/location.module';
 import { SceneModule } from '../Scene/scene.module';
+import { RequisiteModule } from '../Requisite/requisite.module';
 
 // Instruments
 import { Project } from './project.entity';
@@ -19,7 +21,9 @@ import { ProjectService } from './project.service';
         forwardRef(() => AuthModule),
         forwardRef(() => UserModule),
         forwardRef(() => WorkdayModule),
+        forwardRef(() => LocationModule),
         forwardRef(() => SceneModule),
+        forwardRef(() => RequisiteModule),
     ],
     providers: [ ProjectResolver, ProjectService ],
     exports:   [ ProjectService ],

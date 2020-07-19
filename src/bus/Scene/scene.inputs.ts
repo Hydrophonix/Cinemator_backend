@@ -1,6 +1,6 @@
 // Core
 import { InputType, Field, Int, ObjectType } from '@nestjs/graphql';
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 // Entities
 import { Scene } from './scene.entity';
@@ -8,28 +8,32 @@ import { Requisite } from '../Requisite/requisite.entity';
 
 @InputType()
 export class SceneCreateInput {
-    @Field(() => String, { nullable: true })
-    title?: string;
-
-    @Field(() => String, { nullable: true })
-    location?: string;
-
     @Field(() => Int)
     @IsNumber()
-    sceneNumber: number;
+    number: number;
+
+    @Field(() => String, { nullable: true })
+    @IsString()
+    description?: string;
+
+    @Field(() => String, { nullable: true })
+    @IsString()
+    location?: string;
 }
 
 @InputType()
 export class SceneUpdateInput {
-    @Field(() => String, { nullable: true })
-    title?: string;
-
-    @Field(() => String, { nullable: true })
-    location?: string;
-
     @Field(() => Int, { nullable: true })
     @IsNumber()
-    sceneNumber?: number;
+    number?: number;
+
+    @Field(() => String, { nullable: true })
+    @IsString()
+    description?: string;
+
+    @Field(() => String, { nullable: true })
+    @IsString()
+    location?: string;
 }
 
 @ObjectType()

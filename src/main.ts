@@ -15,7 +15,13 @@ async function bootstrap() {
     app.use(cookieParser());
     app.useGlobalPipes(new ValidationPipe());
     app.enableCors({
-        origin:      [ 'http://localhost:3000', 'http://localhost:80', 'http://localhost', 'http://192.168.99.100' ],
+        origin: [
+            'http://localhost:3000',
+            'http://localhost:80',
+            'http://localhost',
+            'http://46.101.215.145',
+            'http://cinemator.pp.ua',
+        ],
         credentials: true,
     });
 

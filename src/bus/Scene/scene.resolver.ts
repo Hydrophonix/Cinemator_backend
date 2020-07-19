@@ -21,13 +21,13 @@ import { SceneCreateInput, SceneUpdateRequisitesResponse, SceneUpdateInput } fro
 @Resolver(() => Scene)
 export class SceneResolver {
     constructor(
+        private readonly sceneService: SceneService,
         @Inject(ProjectService)
         private readonly projectService: ProjectService,
         @Inject(WorkdayService)
         private readonly workdayService: WorkdayService,
         @Inject(RequisiteService)
         private readonly requisiteService: RequisiteService,
-        private readonly sceneService: SceneService,
     ) {}
 
     // ================================================================================================================

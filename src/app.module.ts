@@ -11,6 +11,7 @@ import { ProjectModule } from './bus/Project/project.module';
 import { SceneModule } from './bus/Scene/scene.module';
 import { RequisiteModule } from './bus/Requisite/requisite.module';
 import { WorkdayModule } from './bus/Workday/workday.module';
+import { LocationModule } from './bus/Location/location.module';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { WorkdayModule } from './bus/Workday/workday.module';
         SceneModule,
         RequisiteModule,
         WorkdayModule,
+        LocationModule,
     ],
 })
 export class AppModule {}

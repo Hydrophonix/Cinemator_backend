@@ -23,17 +23,18 @@ export class Scene extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @Field(() => Number)
+    @Column('int')
+    number: number;
+
     @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    title?: string;
+    description?: string;
 
     @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
     location?: string;
 
-    @Field(() => Number)
-    @Column('int')
-    sceneNumber: number;
     // ================================================================================================================
     // Relations
     // ================================================================================================================

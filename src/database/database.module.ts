@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from '../bus/User/user.entity';
 import { Project } from '../bus/Project/project.entity';
 import { Workday } from '../bus/Workday/workday.entity';
+import { Location } from '../bus/Location/location.entity';
 import { Scene } from '../bus/Scene/scene.entity';
 import { Requisite } from '../bus/Requisite/requisite.entity';
 
@@ -21,7 +22,7 @@ import { Requisite } from '../bus/Requisite/requisite.entity';
                 dropSchema:  false,
                 synchronize: true,  // switch this to false once you have the initial tables created and use migrations instead
                 logging:     false,
-                entities:    [ User, Project, Workday, Scene, Requisite ],
+                entities:    [ User, Project, Workday, Location, Scene, Requisite ],
                 migrations:  [ 'src/migration/**/*.ts' ],
                 subscribers: [ 'src/subscriber/**/*.ts' ],
                 cli:         {

@@ -12,6 +12,21 @@ type AuthResponseWeb {
   user: User!
 }
 
+type Location {
+  id: ID!
+  name: String!
+  projectId: String!
+  project: Project!
+}
+
+input LocationCreateInput {
+  name: String!
+}
+
+input LocationUpdateInput {
+  name: String
+}
+
 type Mutation {
   createWorkday(projectId: String!, input: WorkdayCreateInput!): Workday!
   updateWorkday(workdayId: String!, input: WorkdayUpdateInput!): Workday!
@@ -26,6 +41,9 @@ type Mutation {
   updateScene(sceneId: String!, input: SceneUpdateInput!): Scene!
   deleteScene(sceneId: String!): Boolean!
   updateSceneRequisites(requisiteIds: [String!]!, sceneId: String!): SceneUpdateRequisitesResponse!
+  createLocation(projectId: String!, input: LocationCreateInput!): Location!
+  updateLocation(locationId: String!, input: LocationUpdateInput!): Location!
+  deleteLocation(locationId: String!): Boolean!
 
   """Create new project"""
   createProject(input: ProjectCreateInput!): Project!
@@ -39,25 +57,20 @@ type Project {
   id: ID!
   title: String!
   description: String
-  startDay: String!
-  endDay: String!
   ownerId: String!
   owner: User!
   workdays: [Workday!]!
+  locations: [Location!]!
   scenes: [Scene!]!
   requisites: [Requisite!]!
 }
 
 input ProjectCreateInput {
   title: String!
-  startDay: String!
-  endDay: String!
 }
 
 input ProjectUpdateInput {
   title: String
-  startDay: String
-  endDay: String
 }
 
 type Query {
@@ -67,6 +80,7 @@ type Query {
   requisite(requisiteId: String!): Requisite!
   scenes(projectId: String!): [Scene!]!
   scene(sceneId: String!): Scene!
+  locations(projectId: String!): [Location!]!
   ownedProjects: [Project!]!
   me: User!
   users: [User!]!
@@ -74,7 +88,7 @@ type Query {
 
 type Requisite {
   id: ID!
-  title: String!
+  number: Float!
   description: String
   isOrdered: Boolean!
   pricePerDay: Int!
@@ -84,14 +98,14 @@ type Requisite {
 }
 
 input RequisiteCreateInput {
-  title: String!
+  number: Int!
   description: String
   isOrdered: Boolean = false
   pricePerDay: Int = 0
 }
 
 input RequisiteUpdateInput {
-  title: String
+  number: Int
   description: String
   isOrdered: Boolean
   pricePerDay: Int
@@ -99,9 +113,9 @@ input RequisiteUpdateInput {
 
 type Scene {
   id: ID!
-  title: String
+  number: Float!
+  description: String
   location: String
-  sceneNumber: Float!
   projectId: String!
   project: Project!
   workdays: [Workday!]!
@@ -109,15 +123,15 @@ type Scene {
 }
 
 input SceneCreateInput {
-  title: String
+  number: Int!
+  description: String
   location: String
-  sceneNumber: Int!
 }
 
 input SceneUpdateInput {
-  title: String
+  number: Int
+  description: String
   location: String
-  sceneNumber: Int
 }
 
 type SceneUpdateRequisitesResponse {

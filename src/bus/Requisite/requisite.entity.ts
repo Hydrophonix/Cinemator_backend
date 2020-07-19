@@ -13,9 +13,9 @@ export class Requisite extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Field()
-    @Column()
-    title: string;
+    @Field(() => Number)
+    @Column('int')
+    number: number;
 
     @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })

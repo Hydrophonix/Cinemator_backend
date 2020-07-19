@@ -2,6 +2,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import _ from 'lodash';
 
 // Entities
 import { Scene } from '../Scene/scene.entity';
@@ -32,7 +33,10 @@ export class RequisiteService {
     // ================================================================================================================
 
     findProjectRequisites(projectId: string): Promise<Requisite[]> {
-        return this.requisiteRepository.find({ where: { projectId }});
+        return this.requisiteRepository.find({
+            where: { projectId },
+            order: { number: 1 },
+        });
     }
 
     // ================================================================================================================
@@ -54,7 +58,10 @@ export class RequisiteService {
             return [];
         }
 
-        return await this.requisiteRepository.findByIds(requisiteIds);
+        return await this.requisiteRepository.findByIds(
+            requisiteIds,
+            { order: { number: 1 }},
+        );
     }
 
     // ================================================================================================================
@@ -84,11 +91,17 @@ export class RequisiteService {
     // Relations
     // ================================================================================================================
 
-    findRequisiteScenes(requisiteId: string): Promise<Scene[]> {
-        return this.requisiteRepository
-            .createQueryBuilder()
-            .relation('scenes')
-            .of(requisiteId)
-            .loadMany();
+    async findRequisiteScenes(requisiteId: string): Promise<Scene[]> {
+        try {
+            const scenes = await this.requisiteRepository
+                .createQueryBuilder()
+                .relation('scenes')
+                .of(requisiteId)
+                .loadMany<Scene>();
+
+            return _.orderBy(scenes, (scene) => scene.number);
+        } catch (error) {
+            throw new BadRequestException(`Requisite id:${requisiteId} does not exist`);
+        }
     }
 }

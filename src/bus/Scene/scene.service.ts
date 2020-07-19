@@ -2,6 +2,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import _ from 'lodash';
 
 // Entities
 import { Scene } from './scene.entity';
@@ -37,7 +38,10 @@ export class SceneService {
     // ================================================================================================================
 
     findProjectScenes(projectId: string): Promise<Scene[]> {
-        return this.sceneRepository.find({ where: { projectId }});
+        return this.sceneRepository.find({
+            where: { projectId },
+            order: { number: 1 },
+        });
     }
 
     // ================================================================================================================
@@ -58,7 +62,10 @@ export class SceneService {
             return [];
         }
 
-        return await this.sceneRepository.findByIds(scenesIds);
+        return await this.sceneRepository.findByIds(
+            scenesIds,
+            { order: { number: 1 }},
+        );
     }
 
     // ================================================================================================================
@@ -106,6 +113,8 @@ export class SceneService {
         }
     }
 
+    // ================================================================================================================
+
     async addRequisites(sceneId: string, requisitesIds: string[]): Promise<boolean> {
         try {
             await this.sceneRepository
@@ -138,20 +147,32 @@ export class SceneService {
 
     // ================================================================================================================
 
-    findSceneRequisites(sceneId: string): Promise<Requisite[]> {
-        return this.sceneRepository
-            .createQueryBuilder()
-            .relation('requisites')
-            .of(sceneId)
-            .loadMany();
+    async findSceneRequisites(sceneId: string): Promise<Requisite[]> {
+        try {
+            const requisites = await this.sceneRepository
+                .createQueryBuilder()
+                .relation('requisites')
+                .of(sceneId)
+                .loadMany<Requisite>();
+
+            return _.orderBy(requisites, (requisite) => requisite.number);
+        } catch (error) {
+            throw new BadRequestException(`Scene id:${sceneId} does not exist`);
+        }
     }
     // ================================================================================================================
 
-    findSceneWorkdays(sceneId: string): Promise<Workday[]> {
-        return this.sceneRepository
-            .createQueryBuilder()
-            .relation('workdays')
-            .of(sceneId)
-            .loadMany();
+    async findSceneWorkdays(sceneId: string): Promise<Workday[]> {
+        try {
+            const workdays = await this.sceneRepository
+                .createQueryBuilder()
+                .relation('requisites')
+                .of(sceneId)
+                .loadMany<Workday>();
+
+            return workdays.sort();
+        } catch (error) {
+            throw new BadRequestException(`Scene id:${sceneId} does not exist`);
+        }
     }
 }

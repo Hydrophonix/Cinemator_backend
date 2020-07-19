@@ -2,6 +2,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import _ from 'lodash';
 
 // Entities
 import { Workday } from './workday.entity';
@@ -67,7 +68,10 @@ export class WorkdayService {
     // ================================================================================================================
 
     findProjectWorkdays(projectId: string): Promise<Workday[]> {
-        return this.workdayRepository.find({ where: { projectId }});
+        return this.workdayRepository.find({
+            where: { projectId },
+            order: { date: 1 },
+        });
     }
 
     // ================================================================================================================
@@ -126,11 +130,17 @@ export class WorkdayService {
 
     // ================================================================================================================
 
-    findWorkdayScenes(workdayId: string): Promise<Scene[]> {
-        return this.workdayRepository
-            .createQueryBuilder()
-            .relation('scenes')
-            .of(workdayId)
-            .loadMany();
+    async findWorkdayScenes(workdayId: string): Promise<Scene[]> {
+        try {
+            const scenes = await this.workdayRepository
+                .createQueryBuilder()
+                .relation('scenes')
+                .of(workdayId)
+                .loadMany<Scene>();
+
+            return _.orderBy(scenes, (scene) => scene.number);
+        } catch (error) {
+            throw new BadRequestException(`Workday id:${workdayId} does not exist`);
+        }
     }
 }

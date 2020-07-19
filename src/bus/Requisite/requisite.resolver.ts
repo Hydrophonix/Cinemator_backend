@@ -17,9 +17,9 @@ import { RequisiteCreateInput, RequisiteUpdateInput } from './requisite.inputs';
 @Resolver(() => Requisite)
 export class RequisiteResolver {
     constructor(
+        private readonly requisiteService: RequisiteService,
         @Inject(ProjectService)
         private readonly projectService: ProjectService,
-        private readonly requisiteService: RequisiteService,
     ) {}
 
     // ================================================================================================================
