@@ -37,7 +37,7 @@ type Mutation {
   createRequisite(projectId: String!, input: RequisiteCreateInput!): Requisite!
   updateRequisite(requisiteId: String!, input: RequisiteUpdateInput!): Requisite!
   deleteRequisite(requisiteId: String!): Boolean!
-  createScene(input: SceneCreateInput!, workdayId: String, projectId: String!): Scene!
+  createScene(input: SceneCreateInput!, projectId: String!): Scene!
   updateScene(sceneId: String!, input: SceneUpdateInput!): Scene!
   deleteScene(sceneId: String!): Boolean!
   updateSceneRequisites(requisiteIds: [String!]!, sceneId: String!): SceneUpdateRequisitesResponse!
@@ -67,10 +67,12 @@ type Project {
 
 input ProjectCreateInput {
   title: String!
+  description: String
 }
 
 input ProjectUpdateInput {
   title: String
+  description: String
 }
 
 type Query {
@@ -89,9 +91,8 @@ type Query {
 type Requisite {
   id: ID!
   number: Float!
+  title: String!
   description: String
-  isOrdered: Boolean!
-  pricePerDay: Int!
   projectId: String!
   project: Project!
   scenes: [Scene!]!
@@ -99,16 +100,13 @@ type Requisite {
 
 input RequisiteCreateInput {
   number: Int!
+  title: String!
   description: String
-  isOrdered: Boolean = false
-  pricePerDay: Int = 0
 }
 
 input RequisiteUpdateInput {
-  number: Int
+  title: String
   description: String
-  isOrdered: Boolean
-  pricePerDay: Int
 }
 
 type Scene {
@@ -149,20 +147,21 @@ type User {
 
 type Workday {
   id: ID!
-  title: String
   date: String!
+  description: String
   projectId: String!
   project: Project!
   scenes: [Scene!]!
 }
 
 input WorkdayCreateInput {
-  title: String
   date: String!
+  description: String
 }
 
 input WorkdayUpdateInput {
-  title: String
+  date: String!
+  description: String
 }
 
 type WorkdayUpdateScenesResponse {

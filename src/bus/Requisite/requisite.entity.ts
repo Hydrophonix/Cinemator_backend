@@ -1,5 +1,5 @@
 // Core
-import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn, ManyToMany } from 'typeorm';
 
 // Entities
@@ -17,17 +17,13 @@ export class Requisite extends BaseEntity {
     @Column('int')
     number: number;
 
+    @Field(() => String)
+    @Column('text')
+    title: string;
+
     @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
     description?: string;
-
-    @Field(() => Boolean)
-    @Column('boolean')
-    isOrdered: boolean;
-
-    @Field(() => Int)
-    @Column('int')
-    pricePerDay: number;
 
     // ----------------------------------------------------------------------------------------------------------------
     // Relations

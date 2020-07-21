@@ -22,13 +22,13 @@ export class Workday extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Field(() => String, { nullable: true })
-    @Column('text', { nullable: true })
-    title?: string;
-
     @Field()
     @Column('date')
     date: string;
+
+    @Field(() => String, { nullable: true })
+    @Column('text', { nullable: true })
+    description?: string;
 
     // ================================================================================================================
     // Relations

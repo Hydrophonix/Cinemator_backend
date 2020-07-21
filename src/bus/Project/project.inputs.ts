@@ -9,13 +9,9 @@ export class ProjectCreateInput {
     @IsString()
     title: string;
 
-    // @Field(() => String)
-    // @IsISO8601()
-    // startDay: string;
-
-    // @Field(() => String)
-    // @IsISO8601()
-    // endDay:string;
+    @Field(() => String, { nullable: true })
+    @IsString()
+    description?: string;
 }
 
 @InputType()
@@ -23,11 +19,7 @@ export class ProjectUpdateInput {
     @Field(() => String, { nullable: true })
     title?: string;
 
-    // @Field(() => String, { nullable: true })
-    // @IsISO8601()
-    // startDay?: string;
-
-    // @Field(() => String, { nullable: true })
-    // @IsISO8601()
-    // endDay?: string;
+    @Field(() => String, { nullable: true })
+    @IsString()
+    description?: string;
 }

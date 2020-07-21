@@ -12,7 +12,6 @@ import { Requisite } from '../Requisite/requisite.entity';
 // Services
 import { SceneService } from './scene.service';
 import { ProjectService } from '../Project/project.service';
-import { WorkdayService } from '../Workday/workday.service';
 import { RequisiteService } from '../Requisite/requisite.service';
 
 // Instruments
@@ -24,8 +23,6 @@ export class SceneResolver {
         private readonly sceneService: SceneService,
         @Inject(ProjectService)
         private readonly projectService: ProjectService,
-        @Inject(WorkdayService)
-        private readonly workdayService: WorkdayService,
         @Inject(RequisiteService)
         private readonly requisiteService: RequisiteService,
     ) {}
@@ -52,16 +49,9 @@ export class SceneResolver {
     @Mutation(() => Scene)
     async createScene(
         @Args('projectId') projectId: string,
-        @Args('workdayId', { nullable: true }) workdayId: string, // eslint-disable-line @typescript-eslint/indent
         @Args('input') input: SceneCreateInput, // eslint-disable-line @typescript-eslint/indent
     ): Promise<Scene> {
         const project = await this.projectService.findOne(projectId);
-
-        if (workdayId) {
-            const workday = await this.workdayService.findOneById(workdayId);
-
-            return this.sceneService.createOne(input, project, workday);
-        }
 
         return this.sceneService.createOne(input, project);
     }
@@ -114,6 +104,7 @@ export class SceneResolver {
             updatedRequisites,
         };
     }
+
 
     @ResolveField()
     project(

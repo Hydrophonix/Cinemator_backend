@@ -24,14 +24,6 @@ export class Project extends BaseEntity {
     @Column('text', { nullable: true })
     description?: string;
 
-    // @Field()
-    // @Column('date')
-    // startDay: string;
-
-    // @Field()
-    // @Column('date')
-    // endDay: string;
-
     // ================================================================================================================
     // Relations
     // ================================================================================================================

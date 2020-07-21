@@ -22,15 +22,11 @@ export class SceneService {
 
     // ================================================================================================================
 
-    createOne(input: SceneCreateInput, project: Project, workday?: Workday): Promise<Scene> {
+    createOne(input: SceneCreateInput, project: Project): Promise<Scene> {
         const scene: Partial<Scene> = {
             ...input,
             projectId: project.id,
         };
-
-        if (workday) {
-            scene.workdays =  [ workday ];
-        }
 
         return this.sceneRepository.save(scene);
     }
@@ -166,11 +162,11 @@ export class SceneService {
         try {
             const workdays = await this.sceneRepository
                 .createQueryBuilder()
-                .relation('requisites')
+                .relation('workdays')
                 .of(sceneId)
                 .loadMany<Workday>();
 
-            return workdays.sort();
+            return _.orderBy(workdays, (workday) => new Date(workday.date));
         } catch (error) {
             throw new BadRequestException(`Scene id:${sceneId} does not exist`);
         }
