@@ -122,7 +122,7 @@ export class SceneResolver {
         const addLocationIds = _.difference(locationIds, intersection);
         const removeLocationIds = _.difference(currentLocationIds, intersection);
 
-        await this.sceneService.updateRequisitesRelation(sceneId, addLocationIds, removeLocationIds);
+        await this.sceneService.updateLocationsRelation(sceneId, addLocationIds, removeLocationIds);
 
         const updatedScene = await this.sceneService.findOneById(sceneId);
         const updatedLocations = await this.locationService.findManyByIds(

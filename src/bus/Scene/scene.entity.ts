@@ -32,6 +32,10 @@ export class Scene extends BaseEntity {
     @Column('text', { nullable: true })
     title?: string;
 
+    @Field(() => String, { nullable: true })
+    @Column('text', { nullable: true })
+    description?: string;
+
     // ================================================================================================================
     // Relations
     // ================================================================================================================

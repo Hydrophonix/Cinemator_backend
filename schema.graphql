@@ -117,6 +117,7 @@ type Scene {
   id: ID!
   number: Float!
   title: String
+  description: String
   projectId: String!
   project: Project!
   workdays: [Workday!]!
@@ -127,11 +128,13 @@ type Scene {
 input SceneCreateInput {
   number: Int!
   title: String
+  description: String
 }
 
 input SceneUpdateInput {
   number: Int
   title: String
+  description: String
 }
 
 type SceneUpdateLocationsResponse {

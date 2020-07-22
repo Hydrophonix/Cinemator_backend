@@ -16,6 +16,10 @@ export class SceneCreateInput {
     @Field(() => String, { nullable: true })
     @IsString()
     title?: string;
+
+    @Field(() => String, { nullable: true })
+    @IsString()
+    description?: string;
 }
 
 @InputType()
@@ -27,6 +31,10 @@ export class SceneUpdateInput {
     @Field(() => String, { nullable: true })
     @IsString()
     title?: string;
+
+    @Field(() => String, { nullable: true })
+    @IsString()
+    description?: string;
 }
 
 @ObjectType()
