@@ -7,15 +7,17 @@ import _ from 'lodash';
 import { Scene } from './scene.entity';
 import { Project } from '../Project/project.entity';
 import { Workday } from '../Workday/workday.entity';
+import { Location } from '../Location/location.entity';
 import { Requisite } from '../Requisite/requisite.entity';
 
 // Services
 import { SceneService } from './scene.service';
 import { ProjectService } from '../Project/project.service';
+import { LocationService } from '../Location/location.service';
 import { RequisiteService } from '../Requisite/requisite.service';
 
 // Instruments
-import { SceneCreateInput, SceneUpdateRequisitesResponse, SceneUpdateInput } from './scene.inputs';
+import { SceneCreateInput, SceneUpdateRequisitesResponse, SceneUpdateInput, SceneUpdateLocationsResponse } from './scene.inputs';
 
 @Resolver(() => Scene)
 export class SceneResolver {
@@ -23,6 +25,8 @@ export class SceneResolver {
         private readonly sceneService: SceneService,
         @Inject(ProjectService)
         private readonly projectService: ProjectService,
+        @Inject(LocationService)
+        private readonly locationService: LocationService,
         @Inject(RequisiteService)
         private readonly requisiteService: RequisiteService,
     ) {}
@@ -105,6 +109,33 @@ export class SceneResolver {
         };
     }
 
+    // ================================================================================================================
+
+    @Mutation(() => SceneUpdateLocationsResponse)
+    async updateSceneLocations(
+        @Args('sceneId') sceneId: string,
+        @Args('locationIds', { type: () => [ String ] }) locationIds: string[],  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<SceneUpdateLocationsResponse> {
+        const currentLocations = await this.sceneService.findSceneLocations(sceneId);
+        const currentLocationIds = currentLocations.map(({ id }) => id);
+        const intersection = _.intersection(locationIds, currentLocationIds);
+        const addLocationIds = _.difference(locationIds, intersection);
+        const removeLocationIds = _.difference(currentLocationIds, intersection);
+
+        await this.sceneService.updateRequisitesRelation(sceneId, addLocationIds, removeLocationIds);
+
+        const updatedScene = await this.sceneService.findOneById(sceneId);
+        const updatedLocations = await this.locationService.findManyByIds(
+            [ ...addLocationIds, ...removeLocationIds ],
+        );
+
+        return {
+            updatedScene,
+            updatedLocations,
+        };
+    }
+
+    // ================================================================================================================
 
     @ResolveField()
     project(
@@ -129,5 +160,14 @@ export class SceneResolver {
         @Parent() { id }: Scene,
     ): Promise<Workday[]> {
         return this.sceneService.findSceneWorkdays(id);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField()
+    locations(
+        @Parent() { id }: Scene,
+    ): Promise<Location[]> {
+        return this.sceneService.findSceneLocations(id);
     }
 }

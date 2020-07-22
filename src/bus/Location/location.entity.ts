@@ -1,9 +1,10 @@
 // Core
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn, ManyToMany } from 'typeorm';
 
 // Entities
 import { Project } from '../Project/project.entity';
+import { Scene } from '../Scene/scene.entity';
 
 @ObjectType()
 @Entity()
@@ -28,4 +29,8 @@ export class Location extends BaseEntity {
     @ManyToOne(() => Project, (project: Project) => project.locations)
     @JoinColumn({ name: 'projectId' })
     project: Project
+
+    @Field(() => [ Scene ])
+    @ManyToMany(() => Scene, (scene: Scene) => scene.locations)
+    scenes: [ Scene ]
 }

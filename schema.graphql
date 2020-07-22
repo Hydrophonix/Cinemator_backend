@@ -17,6 +17,7 @@ type Location {
   name: String!
   projectId: String!
   project: Project!
+  scenes: [Scene!]!
 }
 
 input LocationCreateInput {
@@ -34,6 +35,9 @@ type Mutation {
   updateWorkdayScenes(sceneIds: [String!]!, workdayId: String!): WorkdayUpdateScenesResponse!
   addScenesToWorkday(sceneIds: [String!]!, workdayId: String!): Workday!
   removeScenesFromWorkday(sceneIds: [String!]!, workdayId: String!): Boolean!
+  createLocation(projectId: String!, input: LocationCreateInput!): Location!
+  updateLocation(locationId: String!, input: LocationUpdateInput!): Location!
+  deleteLocation(locationId: String!): Boolean!
   createRequisite(projectId: String!, input: RequisiteCreateInput!): Requisite!
   updateRequisite(requisiteId: String!, input: RequisiteUpdateInput!): Requisite!
   deleteRequisite(requisiteId: String!): Boolean!
@@ -41,9 +45,7 @@ type Mutation {
   updateScene(sceneId: String!, input: SceneUpdateInput!): Scene!
   deleteScene(sceneId: String!): Boolean!
   updateSceneRequisites(requisiteIds: [String!]!, sceneId: String!): SceneUpdateRequisitesResponse!
-  createLocation(projectId: String!, input: LocationCreateInput!): Location!
-  updateLocation(locationId: String!, input: LocationUpdateInput!): Location!
-  deleteLocation(locationId: String!): Boolean!
+  updateSceneLocations(locationIds: [String!]!, sceneId: String!): SceneUpdateLocationsResponse!
 
   """Create new project"""
   createProject(input: ProjectCreateInput!): Project!
@@ -51,6 +53,8 @@ type Mutation {
   deleteProject(projectId: String!): Boolean!
   loginWeb(input: AuthInput!): AuthResponseWeb!
   registerWeb(input: AuthInput!): AuthResponseWeb!
+  logoutWeb: Boolean!
+  forceLogoutWeb: Boolean!
 }
 
 type Project {
@@ -78,11 +82,11 @@ input ProjectUpdateInput {
 type Query {
   workdays(projectId: String!): [Workday!]!
   workday(workdayId: String!): Workday!
+  locations(projectId: String!): [Location!]!
   requisites(projectId: String!): [Requisite!]!
   requisite(requisiteId: String!): Requisite!
   scenes(projectId: String!): [Scene!]!
   scene(sceneId: String!): Scene!
-  locations(projectId: String!): [Location!]!
   ownedProjects: [Project!]!
   me: User!
   users: [User!]!
@@ -112,24 +116,27 @@ input RequisiteUpdateInput {
 type Scene {
   id: ID!
   number: Float!
-  description: String
-  location: String
+  title: String
   projectId: String!
   project: Project!
   workdays: [Workday!]!
   requisites: [Requisite!]!
+  locations: [Location!]!
 }
 
 input SceneCreateInput {
   number: Int!
-  description: String
-  location: String
+  title: String
 }
 
 input SceneUpdateInput {
   number: Int
-  description: String
-  location: String
+  title: String
+}
+
+type SceneUpdateLocationsResponse {
+  updatedScene: Scene!
+  updatedLocations: [Location!]!
 }
 
 type SceneUpdateRequisitesResponse {

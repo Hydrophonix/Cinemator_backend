@@ -1,10 +1,14 @@
 // Core
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import _ from 'lodash';
+
+// Entities
+import { Location } from './location.entity';
+import { Scene } from '../Scene/scene.entity';
 
 // Instruments
-import { Location } from './location.entity';
-import { Repository } from 'typeorm';
 import { LocationCreateInput, LocationUpdateInput } from './location.inputs';
 
 @Injectable()
@@ -35,6 +39,16 @@ export class LocationService {
 
     findProjectLocations(projectId: string): Promise<Location[]> {
         return this.locationRepository.find({ where: { projectId }});
+    }
+
+    // ================================================================================================================
+
+    async findManyByIds(locationIds: string[]): Promise<Location[]> {
+        if (locationIds.length === 0) {
+            return [];
+        }
+
+        return await this.locationRepository.findByIds(locationIds);
     }
 
     // ================================================================================================================
@@ -74,6 +88,24 @@ export class LocationService {
             return true;
         } catch (error) {
             return false;
+        }
+    }
+
+    // ================================================================================================================
+    // Relations
+    // ================================================================================================================
+
+    async findLocationScenes(locationId: string): Promise<Scene[]> {
+        try {
+            const scenes = await this.locationRepository
+                .createQueryBuilder()
+                .relation('scenes')
+                .of(locationId)
+                .loadMany<Scene>();
+
+            return _.orderBy(scenes, (scene) => scene.number);
+        } catch (error) {
+            throw new BadRequestException(`Location id:${locationId} does not exist`);
         }
     }
 }

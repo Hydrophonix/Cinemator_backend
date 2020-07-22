@@ -15,6 +15,7 @@ import {
 import { Project } from '../Project/project.entity';
 import { Requisite } from '../Requisite/requisite.entity';
 import { Workday } from '../Workday/workday.entity';
+import { Location } from '../Location/location.entity';
 
 @ObjectType()
 @Entity()
@@ -29,11 +30,7 @@ export class Scene extends BaseEntity {
 
     @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
-    description?: string;
-
-    @Field(() => String, { nullable: true })
-    @Column('text', { nullable: true })
-    location?: string;
+    title?: string;
 
     // ================================================================================================================
     // Relations
@@ -56,4 +53,9 @@ export class Scene extends BaseEntity {
     @ManyToMany(() => Requisite, (requisite: Requisite) => requisite.scenes)
     @JoinTable()
     requisites: Requisite
+
+    @Field(() => [ Location ])
+    @ManyToMany(() => Location, (location: Location) => location.scenes)
+    @JoinTable()
+    locations: Location
 }

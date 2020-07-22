@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { Scene } from './scene.entity';
 import { Project } from '../Project/project.entity';
 import { Workday } from '../Workday/workday.entity';
+import { Location } from '../Location/location.entity';
 import { Requisite } from '../Requisite/requisite.entity';
 
 // Instruments
@@ -111,6 +112,26 @@ export class SceneService {
 
     // ================================================================================================================
 
+    async updateLocationsRelation(
+        sceneId: string,
+        addLocationIds: string[],
+        removeLocationIds: string[],
+    ): Promise<boolean> {
+        try {
+            await this.sceneRepository
+                .createQueryBuilder()
+                .relation('locations')
+                .of(sceneId)
+                .addAndRemove(addLocationIds, removeLocationIds);
+
+            return true;
+        } catch (error) {
+            throw new BadRequestException(`Add locations to scene: ${sceneId} failed.`);
+        }
+    }
+
+    // ================================================================================================================
+
     async addRequisites(sceneId: string, requisitesIds: string[]): Promise<boolean> {
         try {
             await this.sceneRepository
@@ -156,6 +177,7 @@ export class SceneService {
             throw new BadRequestException(`Scene id:${sceneId} does not exist`);
         }
     }
+
     // ================================================================================================================
 
     async findSceneWorkdays(sceneId: string): Promise<Workday[]> {
@@ -167,6 +189,20 @@ export class SceneService {
                 .loadMany<Workday>();
 
             return _.orderBy(workdays, (workday) => new Date(workday.date));
+        } catch (error) {
+            throw new BadRequestException(`Scene id:${sceneId} does not exist`);
+        }
+    }
+
+    // ================================================================================================================
+
+    findSceneLocations(sceneId: string): Promise<Location[]> {
+        try {
+            return this.sceneRepository
+                .createQueryBuilder()
+                .relation('locations')
+                .of(sceneId)
+                .loadMany<Location>();
         } catch (error) {
             throw new BadRequestException(`Scene id:${sceneId} does not exist`);
         }

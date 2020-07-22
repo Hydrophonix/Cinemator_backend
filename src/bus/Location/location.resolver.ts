@@ -5,6 +5,7 @@ import { Inject } from '@nestjs/common';
 // Entities
 import { Location } from './location.entity';
 import { Project } from '../Project/project.entity';
+import { Scene } from '../Scene/scene.entity';
 
 // Services
 import { LocationService } from './location.service';
@@ -70,5 +71,14 @@ export class LocationResolver {
         @Parent() { projectId }: Location,
     ): Promise<Project> {
         return this.projectService.findOne(projectId);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField(() => [ Scene ])
+    scenes(
+        @Parent() { id }: Location,
+    ): Promise<Scene[]> {
+        return this.locationService.findLocationScenes(id);
     }
 }

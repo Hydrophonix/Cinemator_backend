@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Modules
 import { ProjectModule } from '../Project/project.module';
+import { LocationModule } from '../Location/location.module';
 import { RequisiteModule } from '../Requisite/requisite.module';
 
 // Instruments
@@ -15,6 +16,7 @@ import { SceneService } from './scene.service';
     imports: [
         TypeOrmModule.forFeature([ Scene ]),
         forwardRef(() => ProjectModule),
+        forwardRef(() => LocationModule),
         forwardRef(() => RequisiteModule),
     ],
     providers: [ SceneResolver, SceneService ],

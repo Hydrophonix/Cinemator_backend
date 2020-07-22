@@ -5,6 +5,7 @@ import { IsNumber, IsString } from 'class-validator';
 // Entities
 import { Scene } from './scene.entity';
 import { Requisite } from '../Requisite/requisite.entity';
+import { Location } from '../Location/location.entity';
 
 @InputType()
 export class SceneCreateInput {
@@ -14,11 +15,7 @@ export class SceneCreateInput {
 
     @Field(() => String, { nullable: true })
     @IsString()
-    description?: string;
-
-    @Field(() => String, { nullable: true })
-    @IsString()
-    location?: string;
+    title?: string;
 }
 
 @InputType()
@@ -29,11 +26,7 @@ export class SceneUpdateInput {
 
     @Field(() => String, { nullable: true })
     @IsString()
-    description?: string;
-
-    @Field(() => String, { nullable: true })
-    @IsString()
-    location?: string;
+    title?: string;
 }
 
 @ObjectType()
@@ -43,4 +36,13 @@ export class SceneUpdateRequisitesResponse {
 
     @Field(() => [ Requisite ])
     updatedRequisites: Requisite[];
+}
+
+@ObjectType()
+export class SceneUpdateLocationsResponse {
+    @Field(() => Scene)
+    updatedScene: Scene;
+
+    @Field(() => [ Location ])
+    updatedLocations: Location[];
 }

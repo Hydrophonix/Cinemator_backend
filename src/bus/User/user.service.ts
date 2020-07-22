@@ -3,8 +3,10 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-// Instruments
+// Entities
 import { User } from './user.entity';
+
+// Instruments
 import { AuthInput } from '../Auth/auth.inputs';
 
 @Injectable()
@@ -28,8 +30,8 @@ export class UserService {
 
     // ================================================================================================================
 
-    async findOne(id: string): Promise<User> {
-        const user = await this.userRepository.findOne(id);
+    async findOne(userId: string): Promise<User> {
+        const user = await this.userRepository.findOne(userId);
 
         if (!user) {
             throw new BadRequestException('User does not exist');
@@ -42,6 +44,16 @@ export class UserService {
 
     findOneByEmail(email: string): Promise<User | undefined> {
         return this.userRepository.findOne({ where: { email }});
+    }
+
+    // ================================================================================================================
+
+    async updateTokenVersion(userId: string): Promise<boolean> {
+        const user = await this.findOne(userId);
+
+        await this.userRepository.update(userId, { tokenVersion: user.tokenVersion + 1 });
+
+        return true;
     }
 
     // ================================================================================================================

@@ -4,9 +4,11 @@ import { ConfigType } from '@nestjs/config';
 import { sign, verify } from 'jsonwebtoken';
 import { Response, Request } from 'express';
 
+// Entities
+import { User } from '../User/user.entity';
+
 // Instruments
 import authConfig from './auth.config';
-import { User } from '../User/user.entity';
 import { IAccessTokenPayload, IRefreshTokenPayload } from './auth.interfaces';
 
 @Injectable()
@@ -15,6 +17,8 @@ export class AuthService {
         @Inject(authConfig.KEY)
         private readonly config: ConfigType<typeof authConfig>,
     ) {}
+
+    // ================================================================================================================
 
     readonly createAccessToken = (user: User) => {
         const payload: IAccessTokenPayload = {
@@ -27,6 +31,8 @@ export class AuthService {
             { expiresIn: this.config.accessTokenDuration },
         );
     };
+
+    // ================================================================================================================
 
     readonly createRefreshToken = (user: User) => {
         const payload: IRefreshTokenPayload = {
@@ -41,12 +47,12 @@ export class AuthService {
         );
     };
 
-    readonly setRefreshTokenToCookies = (user: User, res: Response) => {
-        const token = this.createRefreshToken(user);
+    // ================================================================================================================
 
+    readonly setRefreshTokenToCookies = (refreshToken: string, res: Response) => {
         res.cookie(
             this.config.cookieName,
-            token,
+            refreshToken,
             {
                 httpOnly: true,
                 path:     '/auth/refresh_token',  // Should be equal to refreshToken() path
@@ -55,11 +61,15 @@ export class AuthService {
         );
     };
 
+    // ================================================================================================================
+
     readonly getRefreshTokenFromCookies = (req: Request) => {
         const tokenKey = req.cookies[ this.config.cookieName ];
 
         return tokenKey;
     }
+
+    // ================================================================================================================
 
     private readonly verifyToken = (tokenKey: string, secret: string) => {
         try {
@@ -76,6 +86,8 @@ export class AuthService {
             return null;
         }
     }
+
+    // ================================================================================================================
 
     readonly verifyAccessToken = (headerTokenKey: string) => {
         const tokenKey = headerTokenKey.replace('Bearer ', '');

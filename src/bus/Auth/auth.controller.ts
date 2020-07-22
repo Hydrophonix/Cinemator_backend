@@ -47,12 +47,13 @@ export class AuthController {
         }
 
         const accessToken = this.authService.createAccessToken(user);
+        const refreshToken = this.authService.createRefreshToken(user);
         const refreshTokenResponse: IRefreshTokenResponse = {
             success: true,
             accessToken,
         };
 
-        this.authService.setRefreshTokenToCookies(user, res);
+        this.authService.setRefreshTokenToCookies(refreshToken, res);
 
         return res.send(refreshTokenResponse);
     }
