@@ -1,6 +1,10 @@
 // Core
-import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsNumber, IsString } from 'class-validator';
+import { InputType, Field, Int, ObjectType } from '@nestjs/graphql';
+import { IsNumber, IsString, IsNotEmpty, IsOptional } from 'class-validator';
+
+// Entities
+import { Requisite } from './requisite.entity';
+import { Scene } from '../Scene/scene.entity';
 
 @InputType()
 export class RequisiteCreateInput {
@@ -9,10 +13,12 @@ export class RequisiteCreateInput {
     number: number;
 
     @Field(() => String)
+    @IsNotEmpty()
     @IsString()
     title: string;
 
     @Field(() => String, { nullable: true })
+    @IsOptional()
     @IsString()
     description?: string;
 }
@@ -20,8 +26,22 @@ export class RequisiteCreateInput {
 @InputType()
 export class RequisiteUpdateInput {
     @Field(() => String, { nullable: true })
+    @IsOptional()
+    @IsNotEmpty()
+    @IsString()
     title?: string;
 
     @Field(() => String, { nullable: true })
+    @IsOptional()
+    @IsString()
     description?: string;
+}
+
+@ObjectType()
+export class RequisiteUpdateScenesResponse {
+    @Field(() => Requisite)
+    updatedRequisite: Requisite;
+
+    @Field(() => [ Scene ])
+    updatedScenes: Scene[];
 }

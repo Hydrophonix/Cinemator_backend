@@ -15,9 +15,10 @@ import { SceneService } from './scene.service';
 import { ProjectService } from '../Project/project.service';
 import { LocationService } from '../Location/location.service';
 import { RequisiteService } from '../Requisite/requisite.service';
+import { WorkdayService } from '../Workday/workday.service';
 
 // Instruments
-import { SceneCreateInput, SceneUpdateRequisitesResponse, SceneUpdateInput, SceneUpdateLocationsResponse } from './scene.inputs';
+import { SceneCreateInput, SceneUpdateRequisitesResponse, SceneUpdateInput, SceneUpdateLocationsResponse, SceneUpdateWorkdaysResponse } from './scene.inputs';
 
 @Resolver(() => Scene)
 export class SceneResolver {
@@ -29,6 +30,8 @@ export class SceneResolver {
         private readonly locationService: LocationService,
         @Inject(RequisiteService)
         private readonly requisiteService: RequisiteService,
+        @Inject(WorkdayService)
+        private readonly workdayService: WorkdayService,
     ) {}
 
     // ================================================================================================================
@@ -132,6 +135,32 @@ export class SceneResolver {
         return {
             updatedScene,
             updatedLocations,
+        };
+    }
+
+    // ================================================================================================================
+
+    @Mutation(() => SceneUpdateWorkdaysResponse)
+    async updateSceneWorkdays(
+        @Args('sceneId') sceneId: string,
+        @Args('workdayIds', { type: () => [ String ] }) workdayIds: string[],  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<SceneUpdateWorkdaysResponse> {
+        const currentWorkdays = await this.sceneService.findSceneWorkdays(sceneId);
+        const currentWorkdayIds = currentWorkdays.map(({ id }) => id);
+        const intersection = _.intersection(workdayIds, currentWorkdayIds);
+        const addWorkdayIds = _.difference(workdayIds, intersection);
+        const removeWorkdayIds = _.difference(currentWorkdayIds, intersection);
+
+        await this.sceneService.updateWorkdaysRelation(sceneId, addWorkdayIds, removeWorkdayIds);
+
+        const updatedScene = await this.sceneService.findOneById(sceneId);
+        const updatedWorkdays = await this.workdayService.findManyByIds(
+            [ ...addWorkdayIds, ...removeWorkdayIds ],
+        );
+
+        return {
+            updatedScene,
+            updatedWorkdays,
         };
     }
 

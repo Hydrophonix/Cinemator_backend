@@ -44,6 +44,19 @@ export class WorkdayService {
 
     // ================================================================================================================
 
+    async findManyByIds(workdayIds: Array<string>): Promise<Workday[]> {
+        if (workdayIds.length === 0) {
+            return [];
+        }
+
+        return await this.workdayRepository.findByIds(
+            workdayIds,
+            { order: { date: 1 }},
+        );
+    }
+
+    // ================================================================================================================
+
     updateOne(workday: Workday, input: WorkdayUpdateInput): Promise<Workday> {
         const data: Partial<Workday> = {
             ...workday,

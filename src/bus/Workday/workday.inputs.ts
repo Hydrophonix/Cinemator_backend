@@ -1,6 +1,6 @@
 // Core
 import { InputType, Field, ObjectType } from '@nestjs/graphql';
-import { IsISO8601, IsString } from 'class-validator';
+import { IsISO8601, IsString, IsOptional } from 'class-validator';
 
 // Entities
 import { Workday } from './workday.entity';
@@ -13,17 +13,20 @@ export class WorkdayCreateInput {
     date: string;
 
     @Field(() => String, { nullable: true })
+    @IsOptional()
     @IsString()
     description?: string;
 }
 
 @InputType()
 export class WorkdayUpdateInput {
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
+    @IsOptional()
     @IsISO8601()
-    date: string;
+    date?: string;
 
     @Field(() => String, { nullable: true })
+    @IsOptional()
     @IsString()
     description?: string;
 }

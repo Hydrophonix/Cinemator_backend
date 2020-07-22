@@ -1,6 +1,6 @@
 // Core
 import { InputType, Field } from '@nestjs/graphql';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 @InputType()
 export class ProjectCreateInput {
@@ -10,6 +10,7 @@ export class ProjectCreateInput {
     title: string;
 
     @Field(() => String, { nullable: true })
+    @IsOptional()
     @IsString()
     description?: string;
 }
@@ -17,9 +18,13 @@ export class ProjectCreateInput {
 @InputType()
 export class ProjectUpdateInput {
     @Field(() => String, { nullable: true })
+    @IsOptional()
+    @IsNotEmpty()
+    @IsString()
     title?: string;
 
     @Field(() => String, { nullable: true })
+    @IsOptional()
     @IsString()
     description?: string;
 }

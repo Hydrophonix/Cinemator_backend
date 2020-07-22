@@ -41,16 +41,20 @@ type Mutation {
   createRequisite(projectId: String!, input: RequisiteCreateInput!): Requisite!
   updateRequisite(requisiteId: String!, input: RequisiteUpdateInput!): Requisite!
   deleteRequisite(requisiteId: String!): Boolean!
+  updateRequisiteScenes(sceneIds: [String!]!, requisiteId: String!): RequisiteUpdateScenesResponse!
   createScene(input: SceneCreateInput!, projectId: String!): Scene!
   updateScene(sceneId: String!, input: SceneUpdateInput!): Scene!
   deleteScene(sceneId: String!): Boolean!
   updateSceneRequisites(requisiteIds: [String!]!, sceneId: String!): SceneUpdateRequisitesResponse!
   updateSceneLocations(locationIds: [String!]!, sceneId: String!): SceneUpdateLocationsResponse!
+  updateSceneWorkdays(workdayIds: [String!]!, sceneId: String!): SceneUpdateWorkdaysResponse!
 
   """Create new project"""
   createProject(input: ProjectCreateInput!): Project!
   updateProject(input: ProjectUpdateInput!, projectId: String!): Project!
   deleteProject(projectId: String!): Boolean!
+  updateMe(input: UserUpdateInput!): User!
+  deleteMe: Boolean!
   loginWeb(input: AuthInput!): AuthResponseWeb!
   registerWeb(input: AuthInput!): AuthResponseWeb!
   logoutWeb: Boolean!
@@ -89,7 +93,6 @@ type Query {
   scene(sceneId: String!): Scene!
   ownedProjects: [Project!]!
   me: User!
-  users: [User!]!
 }
 
 type Requisite {
@@ -111,6 +114,11 @@ input RequisiteCreateInput {
 input RequisiteUpdateInput {
   title: String
   description: String
+}
+
+type RequisiteUpdateScenesResponse {
+  updatedRequisite: Requisite!
+  updatedScenes: [Scene!]!
 }
 
 type Scene {
@@ -147,12 +155,23 @@ type SceneUpdateRequisitesResponse {
   updatedRequisites: [Requisite!]!
 }
 
+type SceneUpdateWorkdaysResponse {
+  updatedScene: Scene!
+  updatedWorkdays: [Workday!]!
+}
+
 type User {
   id: ID!
   email: String!
   name: String
   phone: String
   projects: [Project!]!
+}
+
+input UserUpdateInput {
+  phone: String
+  name: String
+  email: String
 }
 
 type Workday {
@@ -170,7 +189,7 @@ input WorkdayCreateInput {
 }
 
 input WorkdayUpdateInput {
-  date: String!
+  date: String
   description: String
 }
 

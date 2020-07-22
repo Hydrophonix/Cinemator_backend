@@ -40,7 +40,7 @@ export class AuthController {
         // token is valid and
         // we can send back an access token
 
-        const user = await this.userService.findOne(token.id);
+        const user = await this.userService.findOneById(token.id);
 
         if (!user || user.tokenVersion !== token.tokenVersion) {
             return res.send(this.NO_TOKEN);

@@ -8,6 +8,7 @@ import { User } from './user.entity';
 
 // Instruments
 import { AuthInput } from '../Auth/auth.inputs';
+import { UserUpdateInput } from './user.inputs';
 
 @Injectable()
 export class UserService {
@@ -30,7 +31,7 @@ export class UserService {
 
     // ================================================================================================================
 
-    async findOne(userId: string): Promise<User> {
+    async findOneById(userId: string): Promise<User> {
         const user = await this.userRepository.findOne(userId);
 
         if (!user) {
@@ -49,7 +50,7 @@ export class UserService {
     // ================================================================================================================
 
     async updateTokenVersion(userId: string): Promise<boolean> {
-        const user = await this.findOne(userId);
+        const user = await this.findOneById(userId);
 
         await this.userRepository.update(userId, { tokenVersion: user.tokenVersion + 1 });
 
@@ -58,7 +59,19 @@ export class UserService {
 
     // ================================================================================================================
 
-    updateOne(input: User): Promise<User> {
-        return this.userRepository.save(input);
+    updateOneById(userId: string, input: UserUpdateInput): Promise<User> {
+        return this.userRepository.save({ id: userId, ...input });
+    }
+
+    // ================================================================================================================
+
+    async deleteOneById(userId: string): Promise<boolean> {
+        try {
+            await this.userRepository.delete(userId);
+
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }

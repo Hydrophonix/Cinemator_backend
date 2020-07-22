@@ -52,6 +52,7 @@ export class SceneService {
 
         return scene;
     }
+
     // ================================================================================================================
 
     async findManyByIds(scenesIds: Array<string>): Promise<Scene[]> {
@@ -127,6 +128,26 @@ export class SceneService {
             return true;
         } catch (error) {
             throw new BadRequestException(`Add locations to scene: ${sceneId} failed.`);
+        }
+    }
+
+    // ================================================================================================================
+
+    async updateWorkdaysRelation(
+        sceneId: string,
+        addWorkdayIds: string[],
+        removeWorkdayIds: string[],
+    ): Promise<boolean> {
+        try {
+            await this.sceneRepository
+                .createQueryBuilder()
+                .relation('workdays')
+                .of(sceneId)
+                .addAndRemove(addWorkdayIds, removeWorkdayIds);
+
+            return true;
+        } catch (error) {
+            throw new BadRequestException(`Add workdays to scene: ${sceneId} failed.`);
         }
     }
 

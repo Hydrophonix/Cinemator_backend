@@ -94,7 +94,7 @@ export class ProjectResolver {
     owner(
         @Parent() { ownerId }: Project,
     ): Promise<User> {
-        return this.userService.findOne(ownerId);
+        return this.userService.findOneById(ownerId);
     }
 
     // ================================================================================================================

@@ -104,4 +104,24 @@ export class RequisiteService {
             throw new BadRequestException(`Requisite id:${requisiteId} does not exist`);
         }
     }
+
+    // ================================================================================================================
+
+    async updateScenesRelation(
+        requisiteId: string,
+        addSceneIds: string[],
+        removeSceneIds: string[],
+    ): Promise<boolean> {
+        try {
+            await this.requisiteRepository
+                .createQueryBuilder()
+                .relation('scenes')
+                .of(requisiteId)
+                .addAndRemove(addSceneIds, removeSceneIds);
+
+            return true;
+        } catch (error) {
+            throw new BadRequestException(`Add scenes to requisite: ${requisiteId} failed.`);
+        }
+    }
 }

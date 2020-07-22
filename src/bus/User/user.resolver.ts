@@ -1,5 +1,5 @@
 // Core
-import { Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Query, ResolveField, Parent, Mutation, Args } from '@nestjs/graphql';
 import { UseGuards, Inject } from '@nestjs/common';
 
 // Entities
@@ -14,6 +14,7 @@ import { ProjectService } from '../Project/project.service';
 import { IContextUser } from '../../graphql/graphql.interfaces';
 import { CurrentUser } from '../Auth/auth.decorators';
 import { AuthGuard } from '../Auth/auth.guard';
+import { UserUpdateInput } from './user.inputs';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -28,14 +29,35 @@ export class UserResolver {
     @Query(() => User)
     @UseGuards(AuthGuard)
     me(@CurrentUser() { id }: IContextUser) {
-        return this.userService.findOne(id);
+        return this.userService.findOneById(id);
     }
 
     // ================================================================================================================
 
-    @Query(() => [ User ])
-    users() {
-        return this.userService.findAll();
+    // @Query(() => [ User ])
+    // users() {
+    //     return this.userService.findAll();
+    // }
+
+    // ================================================================================================================
+
+    @Mutation(() => User)
+    @UseGuards(AuthGuard)
+    updateMe(
+        @Args('input') input: UserUpdateInput,
+        @CurrentUser() { id }: IContextUser,  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<User> {
+        return this.userService.updateOneById(id, input);
+    }
+
+    // ================================================================================================================
+
+    @Mutation(() => Boolean)
+    @UseGuards(AuthGuard)
+    deleteMe(
+        @CurrentUser() { id }: IContextUser,
+    ): Promise<boolean> {
+        return this.userService.deleteOneById(id);
     }
 
     // ================================================================================================================
