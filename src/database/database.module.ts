@@ -16,21 +16,25 @@ import { Requisite } from '../bus/Requisite/requisite.entity';
         TypeOrmModule.forRootAsync({
             imports:    [ ConfigModule ],
             inject:     [ ConfigService ],
-            useFactory: (configService: ConfigService) => ({
-                type:        'postgres',
-                url:         configService.get('DATABASE_URL'),
-                dropSchema:  false,
-                synchronize: true,  // switch this to false once you have the initial tables created and use migrations instead
-                logging:     false,
-                entities:    [ User, Project, Workday, Location, Scene, Requisite ],
-                migrations:  [ 'src/migration/**/*.ts' ],
-                subscribers: [ 'src/subscriber/**/*.ts' ],
-                cli:         {
-                    entitiesDir:    'src/entity',
-                    migrationsDir:  'src/migration',
-                    subscribersDir: 'src/subscriber',
-                },
-            }),
+            useFactory: (configService: ConfigService) => {
+                const isProd = configService.get('NODE_ENV') === 'production';
+
+                return {
+                    type:        'postgres',
+                    url:         configService.get('DATABASE_URL'),
+                    dropSchema:  !isProd && false,
+                    synchronize: !isProd && false,
+                    logging:     !isProd,
+                    entities:    [ User, Project, Workday, Location, Scene, Requisite ],
+                    migrations:  [ 'src/migration/**/*.ts' ],
+                    subscribers: [ 'src/subscriber/**/*.ts' ],
+                    cli:         {
+                        entitiesDir:    'src/entity',
+                        migrationsDir:  'src/migration',
+                        subscribersDir: 'src/subscriber',
+                    },
+                };
+            },
         }),
     ],
 })
