@@ -92,7 +92,7 @@ type Query {
   workdays(projectId: String!): [Workday!]!
   workday(workdayId: String!): Workday!
   locations(projectId: String!): [Location!]!
-  types(projectId: String!): [ReqType!]!
+  reqTypes(projectId: String!): [ReqType!]!
   requisites(projectId: String!): [Requisite!]!
   requisite(requisiteId: String!): Requisite!
   scenes(projectId: String!): [Scene!]!

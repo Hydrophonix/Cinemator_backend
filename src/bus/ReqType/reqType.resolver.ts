@@ -25,7 +25,7 @@ export class ReqTypeResolver {
     // ================================================================================================================
 
     @Query(() => [ ReqType ])
-    types(
+    reqTypes(
         @Args('projectId') projectId: string,
     ): Promise<ReqType[]> {
         return this.reqTypeService.findProjectReqTypes(projectId);
