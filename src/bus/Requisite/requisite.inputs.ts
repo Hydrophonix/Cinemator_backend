@@ -5,6 +5,7 @@ import { IsNumber, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 // Entities
 import { Requisite } from './requisite.entity';
 import { Scene } from '../Scene/scene.entity';
+import { ReqType } from '../ReqType/reqType.entity';
 
 @InputType()
 export class RequisiteCreateInput {
@@ -44,4 +45,13 @@ export class RequisiteUpdateScenesResponse {
 
     @Field(() => [ Scene ])
     updatedScenes: Scene[];
+}
+
+@ObjectType()
+export class RequisiteUpdateReqTypesResponse {
+    @Field(() => Requisite)
+    updatedRequisite: Requisite;
+
+    @Field(() => [ ReqType ])
+    updatedReqTypes: ReqType[];
 }

@@ -38,10 +38,14 @@ type Mutation {
   createLocation(projectId: String!, input: LocationCreateInput!): Location!
   updateLocation(locationId: String!, input: LocationUpdateInput!): Location!
   deleteLocation(locationId: String!): Boolean!
+  createReqType(projectId: String!, input: ReqTypeCreateInput!): ReqType!
+  updateReqType(typeId: String!, input: ReqTypeUpdateInput!): ReqType!
+  deleteReqType(typeId: String!): Boolean!
   createRequisite(projectId: String!, input: RequisiteCreateInput!): Requisite!
   updateRequisite(requisiteId: String!, input: RequisiteUpdateInput!): Requisite!
   deleteRequisite(requisiteId: String!): Boolean!
   updateRequisiteScenes(sceneIds: [String!]!, requisiteId: String!): RequisiteUpdateScenesResponse!
+  updateRequisiteReqTypes(reqTypeIds: [String!]!, requisiteId: String!): RequisiteUpdateReqTypesResponse!
   createScene(input: SceneCreateInput!, projectId: String!): Scene!
   updateScene(sceneId: String!, input: SceneUpdateInput!): Scene!
   deleteScene(sceneId: String!): Boolean!
@@ -69,6 +73,7 @@ type Project {
   owner: User!
   workdays: [Workday!]!
   locations: [Location!]!
+  reqTypes: [ReqType!]!
   scenes: [Scene!]!
   requisites: [Requisite!]!
 }
@@ -87,12 +92,29 @@ type Query {
   workdays(projectId: String!): [Workday!]!
   workday(workdayId: String!): Workday!
   locations(projectId: String!): [Location!]!
+  types(projectId: String!): [ReqType!]!
   requisites(projectId: String!): [Requisite!]!
   requisite(requisiteId: String!): Requisite!
   scenes(projectId: String!): [Scene!]!
   scene(sceneId: String!): Scene!
   ownedProjects: [Project!]!
   me: User!
+}
+
+type ReqType {
+  id: ID!
+  name: String!
+  projectId: String!
+  project: Project!
+  requisites: [Requisite!]!
+}
+
+input ReqTypeCreateInput {
+  name: String!
+}
+
+input ReqTypeUpdateInput {
+  name: String
 }
 
 type Requisite {
@@ -103,6 +125,7 @@ type Requisite {
   projectId: String!
   project: Project!
   scenes: [Scene!]!
+  reqTypes: [ReqType!]!
 }
 
 input RequisiteCreateInput {
@@ -114,6 +137,11 @@ input RequisiteCreateInput {
 input RequisiteUpdateInput {
   title: String
   description: String
+}
+
+type RequisiteUpdateReqTypesResponse {
+  updatedRequisite: Requisite!
+  updatedReqTypes: [ReqType!]!
 }
 
 type RequisiteUpdateScenesResponse {

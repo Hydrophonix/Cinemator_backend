@@ -9,6 +9,7 @@ import { Workday } from '../Workday/workday.entity';
 import { Location } from '../Location/location.entity';
 import { Scene } from '../Scene/scene.entity';
 import { Requisite } from '../Requisite/requisite.entity';
+import { ReqType } from '../ReqType/reqType.entity';
 
 // Services
 import { ProjectService } from './project.service';
@@ -17,6 +18,7 @@ import { WorkdayService } from '../Workday/workday.service';
 import { SceneService } from '../Scene/scene.service';
 import { LocationService } from '../Location/location.service';
 import { RequisiteService } from '../Requisite/requisite.service';
+import { ReqTypeService } from '../ReqType/reqType.service';
 
 // Instruments
 import { IContextUser } from '../../graphql/graphql.interfaces';
@@ -40,6 +42,8 @@ export class ProjectResolver {
         private readonly locationService: LocationService,
         @Inject(RequisiteService)
         private readonly requisiteService: RequisiteService,
+        @Inject(ReqTypeService)
+        private readonly reqTypeService: ReqTypeService,
     ) {}
 
     // ================================================================================================================
@@ -131,5 +135,14 @@ export class ProjectResolver {
         @Parent() { id }: Project,
     ): Promise<Requisite[]> {
         return this.requisiteService.findProjectRequisites(id);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField()
+    reqTypes(
+        @Parent() { id }: Project,
+    ): Promise<ReqType[]> {
+        return this.reqTypeService.findProjectReqTypes(id);
     }
 }

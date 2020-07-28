@@ -9,6 +9,7 @@ import { WorkdayModule } from '../Workday/workday.module';
 import { LocationModule } from '../Location/location.module';
 import { SceneModule } from '../Scene/scene.module';
 import { RequisiteModule } from '../Requisite/requisite.module';
+import { ReqTypeModule } from '../ReqType/reqType.module';
 
 // Instruments
 import { Project } from './project.entity';
@@ -24,6 +25,7 @@ import { ProjectService } from './project.service';
         forwardRef(() => LocationModule),
         forwardRef(() => SceneModule),
         forwardRef(() => RequisiteModule),
+        forwardRef(() => ReqTypeModule),
     ],
     providers: [ ProjectResolver, ProjectService ],
     exports:   [ ProjectService ],

@@ -11,6 +11,7 @@ import { Requisite } from './requisite.entity';
 
 // Instruments
 import { RequisiteCreateInput, RequisiteUpdateInput } from './requisite.inputs';
+import { ReqType } from '../ReqType/reqType.entity';
 
 @Injectable()
 export class RequisiteService {
@@ -107,6 +108,22 @@ export class RequisiteService {
 
     // ================================================================================================================
 
+    async findRequisiteReqTypes(requisiteId: string): Promise<ReqType[]> {
+        try {
+            const reqTypes = await this.requisiteRepository
+                .createQueryBuilder()
+                .relation('reqTypes')
+                .of(requisiteId)
+                .loadMany<ReqType>();
+
+            return reqTypes;
+        } catch (error) {
+            throw new BadRequestException(`Requisite id:${requisiteId} does not exist`);
+        }
+    }
+
+    // ================================================================================================================
+
     async updateScenesRelation(
         requisiteId: string,
         addSceneIds: string[],
@@ -118,6 +135,26 @@ export class RequisiteService {
                 .relation('scenes')
                 .of(requisiteId)
                 .addAndRemove(addSceneIds, removeSceneIds);
+
+            return true;
+        } catch (error) {
+            throw new BadRequestException(`Add scenes to requisite: ${requisiteId} failed.`);
+        }
+    }
+
+    // ================================================================================================================
+
+    async updateReqTypesRelation(
+        requisiteId: string,
+        addReqTypeIds: string[],
+        removeReqTypeIds: string[],
+    ): Promise<boolean> {
+        try {
+            await this.requisiteRepository
+                .createQueryBuilder()
+                .relation('reqTypes')
+                .of(requisiteId)
+                .addAndRemove(addReqTypeIds, removeReqTypeIds);
 
             return true;
         } catch (error) {

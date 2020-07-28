@@ -10,6 +10,7 @@ import { Workday } from '../bus/Workday/workday.entity';
 import { Location } from '../bus/Location/location.entity';
 import { Scene } from '../bus/Scene/scene.entity';
 import { Requisite } from '../bus/Requisite/requisite.entity';
+import { ReqType } from '../bus/ReqType/reqType.entity';
 
 @Module({
     imports: [
@@ -24,8 +25,8 @@ import { Requisite } from '../bus/Requisite/requisite.entity';
                     url:         configService.get('DATABASE_URL'),
                     dropSchema:  !isProd && false,
                     synchronize: !isProd && false,
-                    logging:     !isProd,
-                    entities:    [ User, Project, Workday, Location, Scene, Requisite ],
+                    logging:     !isProd && false,
+                    entities:    [ User, Project, Workday, Location, Scene, Requisite, ReqType ],
                     migrations:  [ 'src/migration/**/*.ts' ],
                     subscribers: [ 'src/subscriber/**/*.ts' ],
                     cli:         {

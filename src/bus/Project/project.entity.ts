@@ -8,6 +8,8 @@ import { Scene } from '../Scene/scene.entity';
 import { Requisite } from '../Requisite/requisite.entity';
 import { Workday } from '../Workday/workday.entity';
 import { Location } from '../Location/location.entity';
+import { ReqType } from '../ReqType/reqType.entity';
+
 
 @ObjectType()
 @Entity()
@@ -44,6 +46,10 @@ export class Project extends BaseEntity {
     @Field(() => [ Location ])
     @OneToMany(() => Location, (location: Location) => location.projectId, { onDelete: 'CASCADE' })
     locations: [ Location ]
+
+    @Field(() => [ ReqType ])
+    @OneToMany(() => ReqType, (reqType: ReqType) => reqType.projectId, { onDelete: 'CASCADE' })
+    reqTypes: [ ReqType ]
 
     @Field(() => [ Scene ])
     @OneToMany(() => Scene, (scene: Scene) => scene.projectId, { onDelete: 'CASCADE' })

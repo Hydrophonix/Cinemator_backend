@@ -7,14 +7,16 @@ import _ from 'lodash';
 import { Requisite } from './requisite.entity';
 import { Project } from '../Project/project.entity';
 import { Scene } from '../Scene/scene.entity';
+import { ReqType } from '../ReqType/reqType.entity';
 
 // Services
 import { RequisiteService } from './requisite.service';
 import { ProjectService } from '../Project/project.service';
 import { SceneService } from '../Scene/scene.service';
+import { ReqTypeService } from '../ReqType/reqType.service';
 
 // Instruments
-import { RequisiteCreateInput, RequisiteUpdateInput, RequisiteUpdateScenesResponse } from './requisite.inputs';
+import { RequisiteCreateInput, RequisiteUpdateInput, RequisiteUpdateScenesResponse, RequisiteUpdateReqTypesResponse } from './requisite.inputs';
 
 @Resolver(() => Requisite)
 export class RequisiteResolver {
@@ -24,6 +26,8 @@ export class RequisiteResolver {
         private readonly projectService: ProjectService,
         @Inject(SceneService)
         private readonly sceneService: SceneService,
+        @Inject(ReqTypeService)
+        private readonly reqTypeService: ReqTypeService,
     ) {}
 
     // ================================================================================================================
@@ -105,6 +109,30 @@ export class RequisiteResolver {
 
     // ================================================================================================================
 
+    @Mutation(() => RequisiteUpdateReqTypesResponse)
+    async updateRequisiteReqTypes(
+        @Args('requisiteId') requisiteId: string,
+        @Args('reqTypeIds', { type: () => [ String ] }) reqTypeIds: string[],  // eslint-disable-line @typescript-eslint/indent
+    ): Promise<RequisiteUpdateReqTypesResponse> {
+        const currentReqTypes = await this.requisiteService.findRequisiteReqTypes(requisiteId);
+        const currentReqTypeIds = currentReqTypes.map(({ id }) => id);
+        const intersection = _.intersection(reqTypeIds, currentReqTypeIds);
+        const addReqTypeIds = _.difference(reqTypeIds, intersection);
+        const removeReqTypeIds = _.difference(currentReqTypeIds, intersection);
+
+        await this.requisiteService.updateReqTypesRelation(requisiteId, addReqTypeIds, removeReqTypeIds);
+
+        const updatedRequisite = await this.requisiteService.findOneById(requisiteId);
+        const updatedReqTypes = await this.reqTypeService.findManyByIds([ ...addReqTypeIds, ...removeReqTypeIds ]);
+
+        return {
+            updatedRequisite,
+            updatedReqTypes,
+        };
+    }
+
+    // ================================================================================================================
+
     @ResolveField()
     project(
         @Parent() { projectId }: Requisite,
@@ -119,5 +147,14 @@ export class RequisiteResolver {
         @Parent() { id }: Requisite,
     ): Promise<Scene[]> {
         return this.requisiteService.findRequisiteScenes(id);
+    }
+
+    // ================================================================================================================
+
+    @ResolveField()
+    reqTypes(
+        @Parent() { id }: Requisite,
+    ): Promise<ReqType[]> {
+        return this.requisiteService.findRequisiteReqTypes(id);
     }
 }
