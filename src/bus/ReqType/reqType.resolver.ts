@@ -17,7 +17,7 @@ import { Requisite } from '../Requisite/requisite.entity';
 @Resolver(() => ReqType)
 export class ReqTypeResolver {
     constructor (
-        private readonly typeService: ReqTypeService,
+        private readonly reqTypeService: ReqTypeService,
         @Inject(ProjectService)
         private readonly projectService: ProjectService,
     ) {}
@@ -28,7 +28,7 @@ export class ReqTypeResolver {
     types(
         @Args('projectId') projectId: string,
     ): Promise<ReqType[]> {
-        return this.typeService.findProjectReqTypes(projectId);
+        return this.reqTypeService.findProjectReqTypes(projectId);
     }
 
     // ================================================================================================================
@@ -38,7 +38,7 @@ export class ReqTypeResolver {
         @Args('input') input: ReqTypeCreateInput,
         @Args('projectId') projectId: string,  // eslint-disable-line @typescript-eslint/indent
     ): Promise<ReqType> {
-        return this.typeService.createOne(input, projectId);
+        return this.reqTypeService.createOne(input, projectId);
     }
 
     // ================================================================================================================
@@ -46,20 +46,20 @@ export class ReqTypeResolver {
     @Mutation(() => ReqType)
     async updateReqType(
         @Args('input') input: ReqTypeUpdateInput,
-        @Args('typeId') typeId: string,  // eslint-disable-line @typescript-eslint/indent
+        @Args('reqTypeId') reqTypeId: string,  // eslint-disable-line @typescript-eslint/indent
     ): Promise<ReqType> {
-        const type = await this.typeService.findOneById(typeId);
+        const reqType = await this.reqTypeService.findOneById(reqTypeId);
 
-        return this.typeService.updateOne(type, input);
+        return this.reqTypeService.updateOne(reqType, input);
     }
 
     // ================================================================================================================
 
     @Mutation(() => Boolean)
     async deleteReqType(
-        @Args('typeId') typeId: string,
+        @Args('reqTypeId') reqTypeId: string,
     ): Promise<Boolean> {
-        return await this.typeService.deleteOne(typeId);
+        return await this.reqTypeService.deleteOne(reqTypeId);
     }
 
     // ================================================================================================================
@@ -79,6 +79,6 @@ export class ReqTypeResolver {
     requisites(
         @Parent() { id }: ReqType,
     ): Promise<Requisite[]> {
-        return this.typeService.findReqTypeRequisites(id);
+        return this.reqTypeService.findReqTypeRequisites(id);
     }
 }

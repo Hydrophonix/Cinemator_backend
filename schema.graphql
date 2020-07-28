@@ -39,8 +39,8 @@ type Mutation {
   updateLocation(locationId: String!, input: LocationUpdateInput!): Location!
   deleteLocation(locationId: String!): Boolean!
   createReqType(projectId: String!, input: ReqTypeCreateInput!): ReqType!
-  updateReqType(typeId: String!, input: ReqTypeUpdateInput!): ReqType!
-  deleteReqType(typeId: String!): Boolean!
+  updateReqType(reqTypeId: String!, input: ReqTypeUpdateInput!): ReqType!
+  deleteReqType(reqTypeId: String!): Boolean!
   createRequisite(projectId: String!, input: RequisiteCreateInput!): Requisite!
   updateRequisite(requisiteId: String!, input: RequisiteUpdateInput!): Requisite!
   deleteRequisite(requisiteId: String!): Boolean!

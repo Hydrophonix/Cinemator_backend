@@ -15,7 +15,7 @@ import { ReqTypeCreateInput, ReqTypeUpdateInput } from './reqType.inputs';
 export class ReqTypeService {
     constructor(
         @InjectRepository(ReqType)
-        private readonly typeRepository: Repository<ReqType>,
+        private readonly reqTypeRepository: Repository<ReqType>,
     ) {}
 
     // ================================================================================================================
@@ -26,53 +26,53 @@ export class ReqTypeService {
             projectId,
         };
 
-        return this.typeRepository.save(type);
+        return this.reqTypeRepository.save(type);
     }
 
     // ================================================================================================================
 
     findProjectReqTypes(projectId: string): Promise<ReqType[]> {
-        return this.typeRepository.find({ where: { projectId }});
+        return this.reqTypeRepository.find({ where: { projectId }});
     }
 
     // ================================================================================================================
 
-    async findManyByIds(typeIds: string[]): Promise<ReqType[]> {
-        if (typeIds.length === 0) {
+    async findManyByIds(reqTypeIds: string[]): Promise<ReqType[]> {
+        if (reqTypeIds.length === 0) {
             return [];
         }
 
-        return await this.typeRepository.findByIds(typeIds);
+        return await this.reqTypeRepository.findByIds(reqTypeIds);
     }
 
     // ================================================================================================================
 
     async findOneById(id: string): Promise<ReqType> {
-        const type = await this.typeRepository.findOne(id);
+        const reqType = await this.reqTypeRepository.findOne(id);
 
-        if (!type) {
+        if (!reqType) {
             throw new BadRequestException('ReqType does not exist');
         }
 
-        return type;
+        return reqType;
     }
 
     // ================================================================================================================
 
-    updateOne(type: ReqType, input: ReqTypeUpdateInput): Promise<ReqType> {
+    updateOne(reqType: ReqType, input: ReqTypeUpdateInput): Promise<ReqType> {
         const data: Partial<ReqType> = {
-            ...type,
+            ...reqType,
             ...input,
         };
 
-        return this.typeRepository.save(data);
+        return this.reqTypeRepository.save(data);
     }
 
     // ================================================================================================================
 
     async deleteOne(id: string): Promise<boolean> {
         try {
-            await this.typeRepository.delete(id);
+            await this.reqTypeRepository.delete(id);
 
             return true;
         } catch (error) {
@@ -84,17 +84,17 @@ export class ReqTypeService {
     // Relations
     // ================================================================================================================
 
-    async findReqTypeRequisites(typeId: string): Promise<Requisite[]> {
+    async findReqTypeRequisites(reqTypeId: string): Promise<Requisite[]> {
         try {
-            const requisites = await this.typeRepository
+            const requisites = await this.reqTypeRepository
                 .createQueryBuilder()
                 .relation('requisites')
-                .of(typeId)
+                .of(reqTypeId)
                 .loadMany<Requisite>();
 
             return _.orderBy(requisites, (requisite) => requisite.number);
         } catch (error) {
-            throw new BadRequestException(`ReqType id:${typeId} does not exist`);
+            throw new BadRequestException(`ReqType id:${reqTypeId} does not exist`);
         }
     }
 }
