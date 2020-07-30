@@ -1,6 +1,6 @@
 // Core
 import { InputType, Field, Int, ObjectType } from '@nestjs/graphql';
-import { IsNumber, IsString, IsOptional } from 'class-validator';
+import { IsNumber, IsString, IsOptional, IsBoolean } from 'class-validator';
 
 // Entities
 import { Scene } from './scene.entity';
@@ -41,6 +41,11 @@ export class SceneUpdateInput {
     @IsOptional()
     @IsString()
     description?: string;
+
+    @Field(() => Boolean, { nullable: true })
+    @IsOptional()
+    @IsBoolean()
+    isCompleted?: boolean;
 }
 
 @ObjectType()

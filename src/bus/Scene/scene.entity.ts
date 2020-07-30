@@ -28,6 +28,10 @@ export class Scene extends BaseEntity {
     @Column('int')
     number: number;
 
+    @Field(() => Boolean)
+    @Column('bool', { default: false })
+    isCompleted: boolean;
+
     @Field(() => String, { nullable: true })
     @Column('text', { nullable: true })
     title?: string;

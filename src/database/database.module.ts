@@ -28,11 +28,10 @@ import { ReqType } from '../bus/ReqType/reqType.entity';
                     logging:     !isProd && false,
                     entities:    [ User, Project, Workday, Location, Scene, Requisite, ReqType ],
                     migrations:  [ 'src/migration/**/*.ts' ],
-                    subscribers: [ 'src/subscriber/**/*.ts' ],
+                    // subscribers: [ 'src/subscriber/**/*.ts' ],
                     cli:         {
-                        entitiesDir:    'src/entity',
-                        migrationsDir:  'src/migration',
-                        subscribersDir: 'src/subscriber',
+                        migrationsDir: 'migration',
+                        // subscribersDir: 'src/subscriber',
                     },
                 };
             },

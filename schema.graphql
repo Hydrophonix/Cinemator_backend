@@ -152,6 +152,7 @@ type RequisiteUpdateScenesResponse {
 type Scene {
   id: ID!
   number: Float!
+  isCompleted: Boolean!
   title: String
   description: String
   projectId: String!
@@ -171,6 +172,7 @@ input SceneUpdateInput {
   number: Int
   title: String
   description: String
+  isCompleted: Boolean
 }
 
 type SceneUpdateLocationsResponse {
