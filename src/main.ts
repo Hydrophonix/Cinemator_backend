@@ -18,11 +18,14 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe());
     app.enableCors({
         origin: [
-            'http://localhost:3000',
-            'http://localhost:80',
             'http://localhost',
-            'http://46.101.215.145',
-            'http://cinemator.pp.ua',
+            'http://localhost:80',
+            'http://localhost:3000', // dev
+            'http://localhost:5000', // serve
+            'http://10.0.1.13:5000', // serve
+            'http://192.168.99.100', // w10 docker
+            'http://46.101.215.145', // prod
+            'http://cinemator.pp.ua', // prod
         ],
         credentials: true,
     });
