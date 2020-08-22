@@ -5,8 +5,8 @@ import { Repository } from 'typeorm';
 import _ from 'lodash';
 
 // Entities
-import { Location } from './location.entity';
 import { Scene } from '../Scene/scene.entity';
+import { Location } from './location.entity';
 
 // Instruments
 import { LocationCreateInput, LocationUpdateInput } from './location.inputs';
