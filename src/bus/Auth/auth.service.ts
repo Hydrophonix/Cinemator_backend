@@ -54,11 +54,11 @@ export class AuthService {
             this.config.cookieName,
             refreshToken,
             {
-                secure:   true,
-                sameSite: true,
-                httpOnly: true,
                 path:     '/auth/refresh_token',  // Should be equal to refreshToken() path
                 maxAge:   this.config.cookieMaxAge,
+                secure:   this.config.isProd,
+                httpOnly: true,
+                sameSite: 'lax',
             },
         );
     };

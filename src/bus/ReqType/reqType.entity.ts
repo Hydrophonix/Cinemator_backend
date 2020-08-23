@@ -26,7 +26,7 @@ export class ReqType extends BaseEntity {
     projectId: string;
 
     @Field(() => Project)
-    @ManyToOne(() => Project, (project: Project) => project.reqTypes)
+    @ManyToOne(() => Project, (project: Project) => project.reqTypes, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'projectId' })
     project: Project
 
