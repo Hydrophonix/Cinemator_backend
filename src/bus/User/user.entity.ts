@@ -35,7 +35,7 @@ export class User extends BaseEntity {
     // ================================================================================================================
 
     @Field(() => [ Project ])
-    @OneToMany(() => Project, (project: Project) => project.ownerId, { onDelete: 'CASCADE' })
+    @OneToMany(() => Project, (project: Project) => project.ownerId)
     projects: Project[]
 
     // Todo: add projects by invites & User Roles
