@@ -74,12 +74,3 @@ export class SceneUpdateWorkdaysResponse {
     @Field(() => [ Workday ])
     updatedWorkdays: Workday[];
 }
-
-@ObjectType()
-export class SceneCompleteManyResponse {
-    @Field(() => [ Scene ])
-    updatedScenes: Scene[];
-
-    @Field(() => [ Workday ])
-    updatedWorkdays: Workday[];
-}

@@ -24,7 +24,6 @@ import {
     SceneUpdateInput,
     SceneUpdateLocationsResponse,
     SceneUpdateWorkdaysResponse,
-    SceneCompleteManyResponse,
 } from './scene.inputs';
 
 @Resolver(() => Scene)
@@ -80,6 +79,15 @@ export class SceneResolver {
         const scene = await this.sceneService.findOneById(sceneId);
 
         return this.sceneService.updateOne(scene, input);
+    }
+
+    // ================================================================================================================
+
+    @Mutation(() => [ Scene ])
+    async completeManyScenes(
+        @Args('sceneIds', { type: () => [ String ] }) sceneIds: string[],
+    ): Promise<Scene[]> {
+        return await this.sceneService.completeManyScenes(sceneIds);
     }
 
     // ================================================================================================================
@@ -167,20 +175,6 @@ export class SceneResolver {
 
         return {
             updatedScene,
-            updatedWorkdays,
-        };
-    }
-    // ================================================================================================================
-
-    @Mutation(() => SceneCompleteManyResponse)
-    async completeManyScenes(
-        @Args('sceneIds', { type: () => [ String ] }) sceneIds: string[],
-    ): Promise<SceneCompleteManyResponse> {
-        const updatedScenes = await this.sceneService.completeManyScenes(sceneIds);
-        const updatedWorkdays = await this.workdayService.findManyBySceneIds(sceneIds);
-
-        return {
-            updatedScenes,
             updatedWorkdays,
         };
     }

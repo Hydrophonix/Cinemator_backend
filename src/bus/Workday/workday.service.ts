@@ -57,22 +57,6 @@ export class WorkdayService {
 
     // ================================================================================================================
 
-    async findManyBySceneIds(sceneIds: string[]): Promise<Workday[]> {
-        if (sceneIds.length === 0) {
-            return [];
-        }
-        console.log('WorkdayService -> sceneIds', sceneIds);
-
-        const result =  await this.workdayRepository.find({
-            where: { scenes: sceneIds }, // TODO: DO NOT WORK
-        });
-        console.log('WorkdayService -> result', result);
-
-        return result;
-    }
-
-    // ================================================================================================================
-
     updateOne(workday: Workday, input: WorkdayUpdateInput): Promise<Workday> {
         const data: Partial<Workday> = {
             ...workday,
