@@ -18,11 +18,18 @@ import { RequisiteService } from '../Requisite/requisite.service';
 import { WorkdayService } from '../Workday/workday.service';
 
 // Instruments
-import { SceneCreateInput, SceneUpdateRequisitesResponse, SceneUpdateInput, SceneUpdateLocationsResponse, SceneUpdateWorkdaysResponse } from './scene.inputs';
+import {
+    SceneCreateInput,
+    SceneUpdateRequisitesResponse,
+    SceneUpdateInput,
+    SceneUpdateLocationsResponse,
+    SceneUpdateWorkdaysResponse,
+    SceneCompleteManyResponse,
+} from './scene.inputs';
 
 @Resolver(() => Scene)
 export class SceneResolver {
-    constructor(
+    constructor( // eslint-disable-line max-params
         private readonly sceneService: SceneService,
         @Inject(ProjectService)
         private readonly projectService: ProjectService,
@@ -160,6 +167,20 @@ export class SceneResolver {
 
         return {
             updatedScene,
+            updatedWorkdays,
+        };
+    }
+    // ================================================================================================================
+
+    @Mutation(() => SceneCompleteManyResponse)
+    async completeManyScenes(
+        @Args('sceneIds', { type: () => [ String ] }) sceneIds: string[],
+    ): Promise<SceneCompleteManyResponse> {
+        const updatedScenes = await this.sceneService.completeManyScenes(sceneIds);
+        const updatedWorkdays = await this.workdayService.findManyBySceneIds(sceneIds);
+
+        return {
+            updatedScenes,
             updatedWorkdays,
         };
     }

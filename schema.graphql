@@ -52,6 +52,7 @@ type Mutation {
   updateSceneRequisites(requisiteIds: [String!]!, sceneId: String!): SceneUpdateRequisitesResponse!
   updateSceneLocations(locationIds: [String!]!, sceneId: String!): SceneUpdateLocationsResponse!
   updateSceneWorkdays(workdayIds: [String!]!, sceneId: String!): SceneUpdateWorkdaysResponse!
+  completeManyScenes(sceneIds: [String!]!): SceneCompleteManyResponse!
 
   """Create new project"""
   createProject(input: ProjectCreateInput!): Project!
@@ -160,6 +161,11 @@ type Scene {
   workdays: [Workday!]!
   requisites: [Requisite!]!
   locations: [Location!]!
+}
+
+type SceneCompleteManyResponse {
+  updatedScenes: [Scene!]!
+  updatedWorkdays: [Workday!]!
 }
 
 input SceneCreateInput {

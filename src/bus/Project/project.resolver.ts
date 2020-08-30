@@ -29,8 +29,7 @@ import { ProjectCreateInput, ProjectUpdateInput } from './project.inputs';
 
 @Resolver(() => Project)
 export class ProjectResolver {
-    // eslint-disable-next-line max-params
-    constructor(
+    constructor( // eslint-disable-line max-params
         private readonly projectService: ProjectService,
         @Inject(UserService)
         private readonly userService: UserService,

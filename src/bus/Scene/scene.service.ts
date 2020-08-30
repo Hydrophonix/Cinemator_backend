@@ -79,6 +79,18 @@ export class SceneService {
 
     // ================================================================================================================
 
+    async completeManyScenes(sceneIds: string[]): Promise<Scene[]> {
+        const scenes = await this.findManyByIds(sceneIds);
+        const updatedScenes = scenes.map((scene) => ({
+            ...scene,
+            isCompleted: true,
+        }));
+
+        return this.sceneRepository.save(updatedScenes);
+    }
+
+    // ================================================================================================================
+
     async deleteOne(id: string): Promise<boolean> {
         try {
             await this.sceneRepository.delete(id);
