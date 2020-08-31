@@ -81,6 +81,22 @@ export class ReqTypeService {
     }
 
     // ================================================================================================================
+
+    async deleteProjectReqTypes(projectId: string): Promise<boolean> {
+        try {
+            await this.reqTypeRepository.createQueryBuilder()
+                .delete()
+                // .from(Location)
+                .where('projectId = :projectId', { projectId })
+                .execute();
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // ================================================================================================================
     // Relations
     // ================================================================================================================
 

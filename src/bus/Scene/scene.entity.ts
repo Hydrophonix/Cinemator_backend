@@ -49,7 +49,7 @@ export class Scene extends BaseEntity {
     projectId: string;
 
     @Field(() => Project)
-    @ManyToOne(() => Project, (project: Project) => project.scenes, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Project, (project: Project) => project.scenes)
     @JoinColumn({ name: 'projectId' })
     project: Project
 

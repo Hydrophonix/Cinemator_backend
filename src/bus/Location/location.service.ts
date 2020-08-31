@@ -92,6 +92,22 @@ export class LocationService {
     }
 
     // ================================================================================================================
+
+    async deleteProjectLocations(projectId: string): Promise<boolean> {
+        try {
+            await this.locationRepository.createQueryBuilder()
+                .delete()
+                // .from(Location)
+                .where('projectId = :projectId', { projectId })
+                .execute();
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // ================================================================================================================
     // Relations
     // ================================================================================================================
 

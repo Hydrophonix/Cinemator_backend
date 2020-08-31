@@ -39,7 +39,7 @@ export class Workday extends BaseEntity {
     projectId: string;
 
     @Field(() => Project)
-    @ManyToOne(() => Project, (project: Project) => project.workdays, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Project, (project: Project) => project.workdays)
     @JoinColumn({ name: 'projectId' })
     project: Project
 
