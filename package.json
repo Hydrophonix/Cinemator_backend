@@ -2,8 +2,7 @@
     "name": "cinemator-backend",
     "version": "1.0.0",
     "description": "Cinemator",
-    "author": "hydrophonixfx@gmail.com",
-    "license": "UNLICENSED",
+    "author": "hydrophonixfx@gmail.com & arziburst@gmail.com",
     "private": true,
     "scripts": {
         "prebuild": "rimraf dist",

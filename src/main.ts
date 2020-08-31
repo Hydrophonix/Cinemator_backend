@@ -21,6 +21,7 @@ async function bootstrap() {
             'http://localhost',
             'http://localhost:3000', // dev
             'http://localhost:5000', // serve
+            'http://localhost:5500', // live-server
             'http://192.168.99.100', // w10 docker
             'https://cinemator.pp.ua', // prod
         ],

@@ -48,6 +48,7 @@ type Mutation {
   updateRequisiteReqTypes(reqTypeIds: [String!]!, requisiteId: String!): RequisiteUpdateReqTypesResponse!
   createScene(input: SceneCreateInput!, projectId: String!): Scene!
   updateScene(sceneId: String!, input: SceneUpdateInput!): Scene!
+  completeManyScenes(sceneIds: [String!]!): [Scene!]!
   deleteScene(sceneId: String!): Boolean!
   updateSceneRequisites(requisiteIds: [String!]!, sceneId: String!): SceneUpdateRequisitesResponse!
   updateSceneLocations(locationIds: [String!]!, sceneId: String!): SceneUpdateLocationsResponse!
