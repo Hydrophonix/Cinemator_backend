@@ -89,6 +89,22 @@ export class RequisiteService {
     }
 
     // ================================================================================================================
+
+    async deleteProjectRequisites(projectId: string): Promise<boolean> {
+        try {
+            await this.requisiteRepository.createQueryBuilder()
+                .delete()
+                // .from(Location)
+                .where('projectId = :projectId', { projectId })
+                .execute();
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // ================================================================================================================
     // Relations
     // ================================================================================================================
 

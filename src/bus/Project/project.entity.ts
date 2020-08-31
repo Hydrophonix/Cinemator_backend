@@ -39,22 +39,22 @@ export class Project extends BaseEntity {
     owner: User
 
     @Field(() => [ Workday ])
-    @OneToMany(() => Scene, (workday: Workday) => workday.projectId)
+    @OneToMany(() => Scene, (workday: Workday) => workday.projectId, { onDelete: 'CASCADE' })
     workdays: [ Workday ]
 
     @Field(() => [ Location ])
-    @OneToMany(() => Location, (location: Location) => location.projectId)
+    @OneToMany(() => Location, (location: Location) => location.projectId, { onDelete: 'CASCADE' })
     locations: [ Location ]
 
     @Field(() => [ ReqType ])
-    @OneToMany(() => ReqType, (reqType: ReqType) => reqType.projectId)
+    @OneToMany(() => ReqType, (reqType: ReqType) => reqType.projectId, { onDelete: 'CASCADE' })
     reqTypes: [ ReqType ]
 
     @Field(() => [ Scene ])
-    @OneToMany(() => Scene, (scene: Scene) => scene.projectId)
+    @OneToMany(() => Scene, (scene: Scene) => scene.projectId, { onDelete: 'CASCADE' })
     scenes: [ Scene ]
 
     @Field(() => [ Requisite ])
-    @OneToMany(() => Requisite, (requisite: Requisite) => requisite.projectId)
+    @OneToMany(() => Requisite, (requisite: Requisite) => requisite.projectId, { onDelete: 'CASCADE' })
     requisites: [ Requisite ]
 }

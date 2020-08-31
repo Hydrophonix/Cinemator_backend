@@ -26,7 +26,7 @@ export class Location extends BaseEntity {
     projectId: string;
 
     @Field(() => Project)
-    @ManyToOne(() => Project, (project: Project) => project.locations, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Project, (project: Project) => project.locations)
     @JoinColumn({ name: 'projectId' })
     project: Project
 

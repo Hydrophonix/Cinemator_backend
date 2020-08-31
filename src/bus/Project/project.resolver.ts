@@ -83,9 +83,15 @@ export class ProjectResolver {
 
     @Mutation(() => Boolean)
     @UseGuards(AuthGuard)
-    deleteProject(
+    async deleteProject(
         @Args('projectId') projectId: string,
     ): Promise<boolean> {
+        await this.workdayService.deleteProjectWorkdays(projectId);
+        await this.sceneService.deleteProjectScenes(projectId);
+        await this.requisiteService.deleteProjectRequisites(projectId);
+        await this.locationService.deleteProjectLocations(projectId);
+        await this.reqTypeService.deleteProjectReqTypes(projectId);
+
         return this.projectService.deleteOne(projectId);
     }
 

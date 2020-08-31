@@ -24,7 +24,7 @@ import { ReqType } from '../bus/ReqType/reqType.entity';
                     type:        'postgres',
                     url:         configService.get('DATABASE_URL'),
                     dropSchema:  !isProd && false,
-                    synchronize: !isProd && false,
+                    synchronize: !isProd && true,
                     logging:     !isProd && false,
                     entities:    [ User, Project, Workday, Location, Scene, Requisite, ReqType ],
                     migrations:  [ 'src/migration/**/*.ts' ],
