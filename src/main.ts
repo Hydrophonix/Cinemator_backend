@@ -4,6 +4,8 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 // App
 import { AppModule } from './app.module';
@@ -14,6 +16,11 @@ async function bootstrap() {
     const port = configService.get('PORT') ?? 4000;
 
     app.set('trust proxy', 1);
+    app.use(rateLimit({
+        windowMs: 60 * 1000, // 1 minutes
+        max:      120, // limit each IP to 120 requests per windowMs
+    }));
+    app.use(helmet());
     app.use(cookieParser());
     app.useGlobalPipes(new ValidationPipe());
     app.enableCors({
